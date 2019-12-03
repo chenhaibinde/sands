@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>我的收藏</title>
+		<link rel="stylesheet" type="text/css" href="web/css/mui.min.css"/>
+		<script src="web/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			html,body{font-size: 80%;}
+          	.mui-content{padding: 0 10px;}
+			ul,li{list-style: none; padding: 0;}
+			.supply{width: 100%; display: flex; justify-content: space-around; align-items: center;border-bottom: 2px solid #eaebeb; }
+			.supply .supply_img{width: 25%;text-align: center;}
+			.supply .supply_img img{width:55px; height: 55px;margin-top: 5px;}
+			.supply .supply_info{width: 75%;}
+			.supply .supply_info ul li{line-height: 16px;}
+			.supply .supply_info ul .title{font-size: 14px;overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+			.supply .supply_info ul .text{color: #555555; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;font-size: 14px;font-weight: bold;}
+			.supply .supply_info ul .address{color: #999; display: flex; flex-wrap: wrap;}
+			.supply .supply_info ul .address .addr{width: 73%; display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+			.supply .supply_info ul .time{color: #999;}
+		</style>
+			
+
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="javascript:history.back(-1);"></a>
+			<h1 class="mui-title">我的收藏</h1>
+		</header>
+		
+		<div class="mui-content">
+			<!-- <a href="/detail/index?id={{ $collect_one->id }}">
+				<div class="supply">							
+					<div class="supply_img"><img src=""</div>
+					<div class="supply_info">
+						<ul>
+							<li class="text">desc</li>
+							<li class="address"><span class="addr">address</span> </li>
+							<li class="time"><span></span></li>
+						</ul>
+					</div>							
+				</div>
+			</a> -->
+
+		</div>
+	</body>
+	<script type="text/javascript">
+		collect();
+		function collect(e) { //我的收藏
+			$.ajax({
+				url: url + "/api/me/collect",
+				dataType: 'json',
+				success: function(res) {
+					if(res.status == 1){
+						var data = res.data.data;
+						if(data.length == 0){
+							mui.alert('暂无信息');
+						}else{
+							var text = "";
+							for(var i=0;i<data.length;i++){
+								var imgall = data[i].pic.split(',')[0];
+								var time = data[i].addtime;
+								var addtime = getDateAfter(time);
+								text += `<a href="/sands/detail.html?is_special=${data[i].is_special}&type=1&id={{ $result_one->id }}">
+									<div class="supply">
+										<div class="supply_img"><img src="${url}/${data[i].pic}"/></div>
+										<div class="supply_info">
+											<ul>
+												<li class="text">${data[i].desc.replace(/\d{7,}/g,"*")}</li>
+												<li class="address"><span class="addr">data[i].address</span></li>
+												<li class="time"><span>${data[i].addtime}</span></li>
+											</ul>
+										</div>
+									</div>
+								</a>`;
+								
+							};
+							$(".mui-content").html(text);
+						};
+						
+					}else{
+						mui.alert(res.msg);
+					};
+				}
+			});
+		};
+	</script>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>沙石信息发布平台</title>
+		<link href="web/css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="web/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="web/css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="web/css/home.css" />
+		<link rel="stylesheet" type="text/css" href="web/css/fabu_model.css" />
+		<script src="web/js/jquery-2.2.4.js" type="text/javascript" charset="utf-8"></script>
+		<script src="web/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="web/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<nav id="home_tarbar" class="mui-bar mui-bar-tab">
+			<a class="mui-tab-item" href="/sands/index.html">
+				<div><img class="home_icon" src="" width="22px" style="" /></div>
+				<span class="mui-tab-label">首页</span>
+			</a>
+			<a class="mui-tab-item mui-active" href="/sands/issueshow.html">
+				<div><img id="tabBar_pic" class="issue_icon" src="" width="22px" style="" /></div>
+				<span class="mui-tab-label">发布</span>
+			</a>
+			<a class="mui-tab-item" href="/sands/consult.html">
+				<div><img class="zixun_icon" src="" width="22px" style="" /></div>
+				<span class="mui-tab-label">资讯</span>
+			</a>
+			<a class="mui-tab-item" href="/sands/meindex.html">
+				<div><img class="my_icon" src="" width="22px" style="" /></div>
+				<span class="mui-tab-label">我的</span>
+			</a>
+		</nav>
+		<div class="mui-content">
+			<!-- 免费说明 -->
+			<div class="afaeae"></div>
+			<div id="page3" class="mui-control-content mui-active" style="background: #FFFFFF;">
+				<div class="head">
+					<img class="left_icon" src="">
+					请选择您要发布的板块
+					<img class="right_icon" src="">
+				</div>
+				<!--供应列表区-->
+				<div class="supply_list" style="border-top:  3px solid #f1f1f2;"></div>
+				<!--二手车设备图片-->
+				<div class="car_img"></div>
+				<!-- 本地图片 -->
+				<div class="other_type" style="width:100%"></div>
+			</div>
+		</div>
+	</body>
+	<script>
+		$(function() {
+			$(".home_icon").attr("src",url+"/web/img/tabBar1_1.png");
+			$(".issue_icon").attr("src",url+"/web/img/tabBar2_1.png");
+			$(".zixun_icon").attr("src",url+"/web/img/tabBar3_1.png");
+			$(".my_icon").attr("src",url+"/web/img/tabBar4_1.png");
+			if ($("#home_tarbar>a").hasClass("mui-active")) {
+				$(".issue_icon").attr("src",url+"/web/img/tabBar2.png");
+				//document.getElementById('tabBar_pic').src = url+"/web/img/tabBar2.png";
+				$("#home_tarbar>.mui-active span").css("color", "#007AFF");
+			};
+			$(".left_icon").attr("src",url+"/uploads/images/fabu01.png");
+			$(".right_icon").attr("src",url+"/uploads/images/fabu02.png");
+
+			function setting(e) {
+				$.ajax({
+					url: url + "/api/index/settings",
+					'dataType': 'json',
+					success: function(res) {
+						// console.log(res);
+						var data = res.data;
+						$(".afaeae").html("<span>" + data.disclaimer + "</span>");
+					}
+
+				})
+			};
+			setting();
+
+			function types(e) { //分类
+				$.ajax({
+					url: url + "/api/index/type",
+					'dataType': 'json',
+					success: function(res) {
+						console.log(res);
+						var data = res.data;
+						var text = '';
+						for (var i = 0; i < data.length; i++) {
+							var img = url + "/uploads/"
+							text +=
+								`<div class="list1">
+						<a href="/sands/issue.html?is_special=${data[i].is_special}&id=${data[i].id}">
+							<ul>
+								<li><img src="${img+data[i].icon}" /></li>
+								<li>${data[i].name}</li>
+							</ul>
+						</a>
+					</div>`;
+							$(".supply_list").html(text)
+						}
+					}
+
+				})
+			};
+			types();
+
+			function twoCar(e) { //二手车
+				$.ajax({
+					url: url + "/api/index/s_type",
+					'dataType': 'json',
+					success: function(res) {
+						console.log(res);
+						var data = res.data;
+						var text = '';
+						for (var i = 0; i < data.length; i++) {
+							var img = url + "/uploads/"
+							text += `<a href="/sands/issue.html?is_special=null&id=${data[i].id}">
+								<img src="${img+data[i].icon}" />
+							</a>`;
+							$(".car_img").html(text)
+						}
+					}
+
+				})
+			};
+			twoCar();
+
+			function localIssues(e) { //本地发布
+				$.ajax({
+					url: url + "/api/index/o_type",
+					'dataType': 'json',
+					success: function(res) {
+						// console.log(res);
+						var data = res.data;
+						var text = '';
+						for (var i = 0; i < data.length; i++) {
+							var img = url + "/uploads/"
+							text +=
+								`<a href="/sands/issue.html?is_special=location&id=${data[i].id}">
+									<img src="${img+data[i].icon}" />
+								</a>`;
+							$(".other_type").html(text)
+						}
+					}
+
+				})
+			};
+			localIssues();
+
+
+		})
+	</script>
+</html>

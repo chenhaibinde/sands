@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>意见反馈</title>
+		<link rel="stylesheet" type="text/css" href="web/css/mui.min.css"/>
+		<script src="web/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.top{display: flex;width: 100%;justify-content: space-between;align-items: center;height: 40px;padding:0 10px; font-size: 12px;}
+			.look_advice{border: 1px solid #E3E3E3;padding: 2px 5px;}
+			.advice{font-size: 14px;width: 100%;}
+			.advice .title{line-height: 35px;}
+			.advice textarea{
+				width:94%;padding: 5px;border: 1px solid #E3E3E3;margin-left: 3%;
+				margin-top: 10px;font-size: 12px;height: 150px;
+			}
+			.advice button{
+			    line-height: 32px;
+			    height: 32px;color: #FFF;
+			    background: #007AFF;
+			    width: 28%;
+			    font-size: 14px;
+				padding: 0px;
+				border: none;
+			}
+			radio {
+			      transform:scale(0.7);
+			}
+			radio-group{
+			    display: flex;justify-content: center;align-items: center;font-size: 12px;
+			}
+			.sub{display: flex;justify-content: space-around;width: 100%;font-size: 14px;}
+			input[type=radio]:before{
+				font-size: 20px !important;
+			}
+			input[type=radio]{
+				top: 0px !important;right: 0;left: 15px;
+			}
+			label{padding: 0 !important;display: flex;justify-content: center;}
+			label span{position: relative;left: 38px;font-size: 12px;}
+			.choose_question{display: flex;justify-content: center;width: 100%;padding: 0 10px;}
+			.choose_question>div{width: 36%;}
+			.mui-input-row{overflow: inherit;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="/me/index"></a>
+			<h1 class="mui-title">意见反馈</h1>
+		</header>
+		<div class="mui-content">
+			<div class="advice">  
+			    <div class='top'>
+			        <div class='title'>意见反馈:</div>  
+			    </div>      
+				<div class="choose_question">
+					<div class="mui-input-row mui-radio">
+						<label><input name="feedback_type" type="radio" value='网站功能缺失'><span>网站功能缺失</span></label>					
+					</div>
+					<div class="mui-input-row mui-radio" style="width: 28%;">
+						<label><input name="feedback_type" type="radio" value='地址错误'><span>地址错误</span></label>					
+					</div>
+					<div class="mui-input-row mui-radio">
+						<label><input name="feedback_type" type="radio" value='其他问题'><span>其他问题</span></label>					
+					</div>
+				</div>       
+				<textarea name='text' placeholder='请填写您的反馈意见'></textarea> 
+				<div class='sub'>
+					<button type="submit">提 交</button>
+					<button style='background:#7eb5f0;'>
+						<a style="color: #FFF;" href="/sands/advice_look.html">查看反馈</a>
+					</button> 
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		function advice(e) {
+			var text = $("textarea[name='text']").val();
+			var feedback_type = $("input[name='feedback_type']:checked").val();
+			console.log(text)
+			console.log(feedback_type)
+			if(text == ""){
+				mui.alert("请填写反馈意见")
+			}else if(feedback_type == undefined){
+				mui.alert("请选择反馈类型")
+			}else{
+				$.ajax({
+					url: url + "/api/me/feedback",
+					dataType: 'json',
+					data: {
+						text: text,
+						feedback_type: feedback_type
+					},
+					success: function(res) {
+						console.log(res);
+						var data = res.data;
+						if(res.msg == "请登录"){
+							mui.alert(res.msg)
+						}else{
+							mui.alert("反馈成功");
+							window.location.href = "/sands/meindex.html";
+						}
+						
+					}
+				});
+			};
+			
+		};
+		$("button[type='submit']").click(function(){
+			advice();
+		})
+	</script>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>沙石信息发布平台</title>		
+		<link rel="stylesheet" type="text/css" href="web/css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="web/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="web/css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="web/css/home.css" />
+		<link rel="stylesheet" type="text/css" href="web/css/fabu_model.css" />
+		<script src="web/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="web/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			$(function() {
+				
+				// var id = 1;
+				// if(id == 1) {
+				// 	window.location.replace("/sands/loginchoose.html");
+				// };
+				//头像点击事件
+				$("#pic").click(function() {
+					$("#upload").trigger("click");
+				})
+
+				//ajax上传图片
+				$("#upload").change(function() {
+					var formData = new FormData($("#form")[0])
+					formData.append('pic', $('#upload')[0].files[0])
+					// console.log($('#upload')[0]);
+					// console.log($('#upload')[0].files[0]);
+
+					// console.log(formData);
+					$.ajax({
+						url: '/me/pic',
+						data: formData,
+						type: "POST",
+						async: false,
+						processData: false,
+						contentType: false,
+						success: function(data) {
+							if (data.match("storage")) {
+								$("#pic").prop("src", "/" + data);
+							} else {
+								mui.alert(data);
+							}
+						},
+						error: function() {
+							//失败
+						}
+					})
+				})
+
+			})
+		</script>
+		<style type="text/css">
+			#home_tarbar {
+				background-color: #FFF;
+				box-shadow: 0 0 1px rgba(0, 0, 0, .15);
+			}
+
+			body {
+				background: #f1f1f2;
+			}
+
+			.mui-content {
+				background: #f1f1f2;
+			}
+
+			.my_card {
+				padding: 0px 12px;
+				justify-content: space-between;
+				background: #007AFF;
+				height: 125px;
+				align-items: stretch;
+			}
+
+			.my_card .info {
+				width: 79%;
+				font-size: 12px;
+			}
+
+			.my_card .info ul li {
+				line-height: 17px;
+				color: #FFF;
+			}
+
+			.Head {
+				width: 52px !important;
+			}
+
+			.Head img {
+				width: 100%;
+				height: 100%;
+				border-radius: 50%;
+			}
+
+			.all_info {
+				width: 100%;
+				padding: 0 10px;
+				background: #f1f1f2;
+				font-size: 12px;
+			}
+
+			.join {
+				display: flex;
+				justify-content: space-between;
+				border-radius: 8px;
+				margin-top: 8px;
+				padding: 10px;
+				background: #FFF;
+				position: relative;
+				top: -55px;
+				border-bottom: 1px solid #ebebeb;
+			}
+
+			.join>div {
+				width: 50%;
+				text-align: center;
+			}
+
+			.join>div a img {
+				width: 15px;
+				height: 15px;
+			}
+
+			.join>div a div {
+				padding-top: 5px;
+				color: #707070;
+			}
+
+			.all_service {
+				background: #FFF;
+				margin-top: 8px;
+				border-radius: 8px;
+				position: relative;
+				top: -55px;
+				border-bottom: 1px solid #ebebeb;
+			}
+
+			.all_service .service {
+				height: 40px;
+				line-height: 40px;
+				font-weight: bold;
+				padding-left: 5%;
+				width: 100%;
+				border-bottom: 1px solid #f3f3f3;
+				font-size: 14px;
+				color: #1b1b1b;
+			}
+
+			.all_service .service_info {
+				display: flex;
+				flex-wrap: wrap;
+			}
+
+			.all_service .service_info>div {
+				width: 25%;
+				text-align: center;
+				padding: 8px;
+			}
+
+			.all_service .service_info>div a img {
+				width: 20px;
+				height: 20px;
+			}
+
+			.all_service .service_info>div a div {
+				padding-top: 5px;
+				color: #707070;
+			}
+		</style>
+
+	</head>
+	<body>
+		<nav id="home_tarbar" class="mui-bar mui-bar-tab">
+			<a class="mui-tab-item" href="/sands/index.html">
+				<div><img id="tabBar_icon1" width="22px" /></div>
+				<span class="mui-tab-label">首页</span>
+			</a>
+			<a class="mui-tab-item" href="/sands/issueshow.html">
+				<div><img id="tabBar_icon2" width="22px" /></div>
+				<span class="mui-tab-label">发布</span>
+			</a>
+			<a class="mui-tab-item" href="/sands/consult.html">
+				<div><img id="tabBar_icon3" width="22px" /></div>
+				<span class="mui-tab-label">资讯</span>
+				<i id="msg_count" style="display:none">0</i>
+			</a>
+			<a class="mui-tab-item mui-active" href="/sands/meindex.html">
+				<div><img id="tabBar_pic" width="22px" /></div>
+				<span class="mui-tab-label">我的</span>
+			</a>
+		</nav>
+		<div class="mui-content">
+			<div id="page5" class="mui-control-content mui-active">
+				<header class="mui-bar mui-bar-nav">
+					<h1 class="mui-title">我的</h1>
+				</header>
+				<div class="mui-content">
+					<div class="my_card">
+						<div class="Head">
+							<!--<a href="my_info.html"><img src="img/lawyer_card02.png" alt="" /></a>-->
+							<form action="" method="post" id="form" enctype="multipart/form-data" style="height:52px;">
+								<img id="pic" src="@isset ($userinfo->pic)
+									/{{ $userinfo->pic }}
+									@endisset
+                                    @empty ($userinfo->pic)
+									/web/img/user.png
+									@endempty">
+								<input id="upload" name="file" accept="image/*" type="file" style="display: none"><br />
+							</form>
+						</div>
+						<div class="info">
+							<a href="#">
+								<ul>
+									<li>姓名：<span><input name="name" id="" disabled value="用户名" /></span></li>
+									<li>身份：<span><input name="card" id="" disabled value="用户身份" /></span> </li>
+									<li>手机：<span><input name="phone" id="" disabled value="用户手机" /></span> </li>
+									<!-- <li>代理商等级：<span style="">{{ $userinfo->partner }}</span> </li> -->
+
+
+								</ul>
+							</a>
+						</div>
+					</div>
+				</div>
+
+				<!--成为合伙人-->
+				<!-- <div class="hehuo_img" style="background: #FFFFFF !important;">
+					<a href="/partner/index">
+						<img src="/web/img/hehuo_picture.png" alt="" />
+					</a>
+				</div> -->
+				<div class="all_info">
+					<div class="join">
+						<div>
+							<a href="/sands/vip.html">
+								<img class="icon vip_icon" alt="" />
+								<div>加入会员</div>
+							</a>
+						</div>
+						<!-- <div>
+							<a href="/sands/join_us.html">
+								<img class="icon join_icon" src="" alt="" />
+								<div>加入我们</div>
+							</a>
+						</div> -->
+						<div>
+							<a href="/sands/mewallet.html">
+								<div style="color:#007AFF;padding:2px 0;">balance元</div>
+								<div>收入金额</div>
+							</a>
+						</div>
+						<!-- @if ($userinfo->identity=='会员')
+						<div>
+							<a href="/me/vip">
+								<div style="color:#007AFF;padding:2px 0;">{{$userinfo->shipendtime}}</div>
+								<div>到期时间</div>
+							</a>
+						</div>
+						@else
+						<div>
+							<a href="/me/vip">
+								<img class="icon vip_icon" src="/web/img/my1.png" alt="" />
+								<div>加入会员</div>
+							</a>
+						</div>
+						@endif
+						@if($agent_id>0)
+						<div>
+							<a href="/me/mywallet">
+								<div style="color:#007AFF;padding:2px 0;">{{$userinfo->balance}}元</div>
+								<div>收入金额</div>
+
+							</a>
+						</div>
+						@else
+						<div>
+							<a href="/me/join_us">
+								<img class="icon join_icon" src="" alt="" />
+								<div>加入我们</div>
+							</a>
+						</div>
+						@endif -->
+
+					</div>
+					<div class="all_service">
+						<div class="service">我的服务</div>
+						<div class="service_info">
+							<div>
+								<a href="/sands/memyinfo.html">
+									<img class="icon meinfo_icon" style="width:18px;" alt="" />
+									<div>修改资料</div>
+								</a>
+							</div>
+							<div>
+								<a href="/sands/mesupply.html">
+									<img class="icon mesupply_icon" alt="" />
+									<div>我的发布</div>
+								</a>
+							</div>
+							<div>
+								<a href="/sands/mebrowses.html">
+									<img class="icon mebrowses_icon" style="width:25px;" alt="" />
+									<div>最近浏览</div>
+								</a>
+							</div>
+							<div>
+								<a href="/sands/meevaluates.html">
+									<img class="icon meevaluates_icon" alt="" />
+									<div>我的评价</div>
+								</a>
+							</div>
+							<div>
+								<a href="/sands/meshare.html">
+									<img class="icon meshare_icon" alt="" />
+									<div>链接分享</div>
+								</a>
+							</div>
+							<div>
+								<a href="/sands/mecollect.html">
+									<img class="icon mecollect_icon" alt="" />
+									<div>收藏</div>
+								</a>
+							</div>
+
+						</div>
+					</div>
+
+					<div class="all_service">
+						<div class="service">平台服务</div>
+						<div class="service_info">
+							<div>
+								<a href="/sands/contact_us.html">
+									<!--<a href="tel:{{ $telephone->telephone }}">-->
+									<img class="icon contact_icon" alt="" />
+									<div>联系我们</div>
+								</a>
+							</div>
+							<div>
+								<a href="/sands/advice.html">
+									<img class="icon advice_icon" alt="" />
+									<div>意见反馈</div>
+								</a>
+							</div>
+							<div>
+								<a href="/sands/meshezhi.html">
+									<img class="icon meshezhi_icon" alt="" />
+									<div>设置</div>
+								</a>
+							</div>
+							<div>
+								<a href="/sands/login.html?identity=daili">
+									<img class="icon daili_icon" alt="" />
+									<div>代理商</div>
+								</a>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</body>
+	<script>
+		$(function() {
+			$("#tabBar_icon1").attr("src",url+"/web/img/tabBar1_1.png");
+			$("#tabBar_icon2").attr("src",url+"/web/img/tabBar2_1.png");
+			$("#tabBar_icon3").attr("src",url+"/web/img/tabBar3_1.png");
+			// $("#tabBar_pic").attr("src",url+"/web/img/tabBar4_1.png");
+			$(".vip_icon").attr("src",url+"/web/img/my1.png");
+			$(".join_icon").attr("src",url+"/web/img/my2.png");
+			$(".meinfo_icon").attr("src",url+"/web/img/my3.png");
+			$(".mesupply_icon").attr("src",url+"/web/img/my4.png");
+			$(".mebrowses_icon").attr("src",url+"/web/img/my5.png");
+			$(".meevaluates_icon").attr("src",url+"/web/img/my6.png");
+			$(".meshare_icon").attr("src",url+"/web/img/my7.png");
+			$(".mecollect_icon").attr("src",url+"/web/img/my8.png");
+			$(".contact_icon").attr("src",url+"/web/img/my9.png");
+			$(".advice_icon").attr("src",url+"/web/img/my10.png");
+			$(".meshezhi_icon").attr("src",url+"/web/img/my11.png");
+			$(".daili_icon").attr("src",url+"/web/img/my12.png");
+			// 添加当前页面的tabbar显示
+			if ($("#home_tarbar>a").hasClass("mui-active")) {
+				document.getElementById('tabBar_pic').src = url+"/web/img/tabBar4.png";
+				$("#home_tarbar>.mui-active span").css("color", "#007AFF");
+			};
+		});
+		var token = getToken();
+		console.log(token)
+		function myinfo(e) { //个人信息
+			$.ajax({
+				url: url + "/api/me/index",
+				type: "get",
+				cache :false,
+				data: {
+					'token':token
+				},
+				// jsonp: "callback",
+				// jsonpCallback:"success",
+				// headers:{'Content-Type':'application/json;charset=utf8',
+				// 'token': token
+				// },
+				success: function(res) {
+					console.log(res);
+					var data = res.data;
+				},
+				error: function(err){console.log(err)}
+			});
+		};
+		myinfo();
+		
+	</script>
+</html>

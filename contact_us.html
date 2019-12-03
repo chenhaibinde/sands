@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>联系我们</title>
+		<script src="web/js/jquery-2.2.4.js" type="text/javascript" charset="utf-8"></script>
+		<script src="web/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+      	<link rel="stylesheet" type="text/css" href="web/css/mui.min.css" />
+		<style type="text/css">
+			*{padding:0;margin:0;}
+			body{background: #f1f1f2;}
+			.head{height:210px;width:100%;display:flex;justify-content:center;align-items:center;font-size: 12px;color: #6b6b6b;background: #f1f1f2;}
+			.head img{width:90px;height:120px;border-radius: 10px;}
+			.kefu{display:flex;justify-content:space-between;}
+			.li{line-height:35px;border-bottom:1px solid #e2e2e2;font-size: 12px;color: #6b6b6b;}
+			.li:nth-of-type(3){border-bottom:none;}
+			.li img{width:12px;height:10px;margin-right:3px;}
+			.content{width:100%;background:#FFF;padding:0 10px;box-sizing:border-box;}
+			.phone{font-size:16px;color:#007AFF;font-weight:bold;margin-left:3px;}
+		</style>
+		<script type="text/javascript">
+			$(function(){
+				$(".head>img").attr("src",url+"/web/img/logo_icon.png");
+				$(".phone_icon").attr("src",url+"/web/img/phone_icon.png");
+				$(".email_icon").attr("src",url+"/web/img/email_icon.png");
+				$(".wx_icon").attr("src",url+"/web/img/weixin_icon.png");
+			});
+		</script>
+	</head>
+	<body>
+      	<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="/sands/meindex.html"></a>
+			<h1 class="mui-title">联系我们</h1>
+		</header>
+		<div class="head mui-content">
+			<img src="" style="margin:10px 0;">
+		</div>
+		<div class="content">
+			<div class="kefu li">
+				<div><img class="phone_icon" src="" >
+					<span>客服电话:</span><span class="phone"></span>
+				</div>
+				<div><a class="dail_phone" href="">拨打＞</a></div>
+			</div>
+			<div class="li">
+				<img class="email_icon" src="" ><span class="email"></span>
+			</div>
+			<div class="li">
+				<img class="wx_icon" src="" ><span class="wx"></span>
+			</div>
+		</div>		
+	</body>
+	<script type="text/javascript">
+		contect_us();
+		function contect_us(e) { //联系我们
+			$.ajax({
+				url: url + "/api/index/settings",
+				dataType: 'json',
+				success: function(res) {
+					console.log(res);
+					var data = res.data;
+					var telephone = data.telephone;
+					var email = data.email;
+					var wx = data.wx;
+					$(".dail_phone").attr("href","tel:"+telephone);
+					$(".phone").text(telephone);
+					$(".email").text("企业邮箱:"+email);
+					$(".wx").text("官方微信:"+wx);
+					
+				}				
+			});
+		};
+	</script>
+</html>

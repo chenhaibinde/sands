@@ -1,0 +1,30 @@
+.head{width: 100%; overflow: auto; padding: 30px 0 20px 0; text-align: center; font-size: 16px; color: #353535;background: #FFFFFF;border-top: 3px solid #f1f1f2;font-weight:600;display: flex;justify-content: center;}
+/*我的css样式*/
+.my_card{display: flex; height: 100px; align-items: center;width: 100%; background: white; border-bottom: 1px solid #CCCCCC;}
+.my_card .Head{width: 35%; text-align: center;}
+/*.my_card .Head a img{margin-left: 20px; display: block; width: 80px; height: 80px;line-height: 80px; border-radius:100% ; background: #66AFE9;}*/
+.my_card .info{width: 55%; }
+.my_card .info a{color: #007AFF;}
+.my_card .info ul li{line-height: 20px; display: block;}
+.my_card .info ul li input{width: 70%;  background: none; border: none;}
+.hehuo_img{width: 100%; text-align: center;}
+.hehuo_img img{width: 100%; }
+#page5 .mui-table-view li {line-height: 30px;}
+#page5 .mui-table-view li a .icon{width: 25px; position: relative; top: 7px; margin: 0 6px;}
+#page5 .mui-table-view li a .tel{color: #9D9D9D;float: right; margin:3px 5% 0 0; }
+.other_type{padding:0 10px;}
+.other_type img{width:100%;height:72px;}
+
+.mui-bar {
+	/* background-color: #FFF; */
+	box-shadow: 0 0 1px rgba(0, 0, 0, .15);
+}
+.afaeae {
+	color: #afaeae;
+	width: 96%;
+	margin-left: 2%;
+	line-height: 20px;
+	margin-top: 5px;
+	font-size: 12px;
+}
+.head>img{width: 60px;height: 15px;padding: 0 5px;}

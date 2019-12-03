@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>用户注册</title>
+		<link rel="stylesheet" type="text/css" href="web/css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="web/css/register.css"/>
+		<script src="web/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="web/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="javascript:void(0);"></a>
+			<h1 class="mui-title">用户注册</h1>
+		</header>
+		<div class="mui-content" style="padding: 44px 15px 0 15px;">
+			<div class="div_f">
+				<div class="div_col" id="me">
+					<div class="div_c_r">
+						<input type="text" value="" name="account" id="name" placeholder="请填写用户名(必填)" required="required">
+						<span id="tish"></span></input>
+					</div>
+				</div>
+				<div style="clear:both"></div>
+			</div>
+			<div class="div_f">
+				<div class="div_col" id="me">
+					<div class="div_c_r">
+						<input type="password" value="" name="pass" id="password" onkeydown="" value="" placeholder="请填写密码(必填)" required="required">
+						<span id="ts"></span></input>
+					</div>
+				</div>
+				<div style="clear:both"></div>
+			</div>
+			<div class="div_f">
+				<div class="div_col" id="me">					
+					<div class="div_c_r"><input type="password" value="" name="spass" id="Pwdagain" onkeydown="" value="" placeholder="请填写确认密码(必填)" required="required">
+						<span id="tishi"></span></input>
+					</div>
+				</div>
+				<div style="clear:both"></div>
+			</div>
+			<div class="div_f">
+				<div class="div_col" id="me">					
+					<div class="div_c_r"><input type="tel" value="" name="phone" onkeydown="" id="phone" value="" placeholder="请填写手机号码(必填)" required="required">
+						<span id="tss"></span>
+					</div>
+				</div>
+				<div style="clear:both"></div>
+			</div>
+			<input type="hidden" name="chengshi" value="西安市">
+			<button type="submit" id="submit" class="btn_1">注册</button>
+			
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(".mui-action-back").click(function(){
+			window.location.href = "/sands/loginchoose.html";
+		})
+		$("button[type='submit']").click(function(){
+			register();
+		});
+		function register(){
+			var myreg = /^[1]([3-9])[0-9]{9}$/;
+			var account = $("input[name='account']").val();
+			var phone = $("input[name='phone']").val();
+			var pass = $("input[name='pass']").val();
+			var spass = $("input[name='spass']").val();
+			var chengshi= $("input[name='chengshi']").val();
+			console.log(account)
+			console.log(phone)
+			console.log(pass)
+			console.log(spass)
+			if(account == ""){
+				mui.alert("请填写姓名");
+			}else if(phone == ""){
+				mui.alert("请填写手机号");
+			}else if(pass == ""){
+				mui.alert("请填写密码");
+			}else if(spass == ""){
+				mui.alert("请填写确认密码");
+			}else if(pass != spass){
+				mui.alert("两次密码不一致");
+			}else if(!myreg.test(phone)){
+				mui.alert("请输入正确的手机号");
+			}else{
+				$.ajax({
+					url: url + "/api/login/reg",
+					dataType: 'json',
+					method: "POST",
+					data: {
+						account: account,
+						phone: phone,
+						pass: pass,
+						spass: spass,
+						chengshi: chengshi
+					},
+					success: function(res) {
+						console.log(res);
+						var data = res.data;
+						if(res.status == 0){
+							mui.alert(res.msg)
+						}else{
+							mui.alert(res.data);
+							localStorage.setItem("account",account);
+							localStorage.setItem("chengshi",chengshi);
+							window.location.href = "/sands/login.html";
+							
+						}
+						
+					}
+				});
+			};
+		};
+	</script>
+</html>

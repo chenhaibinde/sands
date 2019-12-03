@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>加入我们</title>
+		<script src="web/js/jquery-2.2.4.js" type="text/javascript" charset="utf-8"></script>
+      	<script src="web/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="web/js/mui.previewimage.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="web/css/mui.min.css"/>
+      	<link rel="stylesheet" type="text/css" href="web/css/preview.css"/>
+		<style type="text/css">
+			.content{font-size: 11px;color: #646464;line-height: 18px;padding: 10px;box-sizing: border-box;}
+			button{
+				font-size: 13px;color: #007aff;
+				line-height: 16px;width:102px;height:25px;
+				background:rgba(255,255,255,1);
+				box-shadow:2px 3px 7px 0px rgba(51,93,136,0.18);
+				border-radius:24px;position: relative;top:190px;
+			}
+			button::after{border:none;}
+          
+          	.share_model{position:fixed;height:100%;width:100%;background: rgba(0,0,0,0.6);left:0%;top:0%;display:flex;justify-content:center;align-items:center;}
+			.share_model .contents{width:90%;background:#FFF;text-align: center;padding: 10% 0;}
+			.share_model .contents img{width: 140px; height: 140px;margin-bottom:10px;margin: auto;}
+			
+			.title{margin-bottom: 20px;font-size: 14px;}
+			
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="/me/index"></a>
+			<h1 class="mui-title">加入我们</h1>
+		</header>
+		<div class="mui-content">       
+			
+		</div>
+      	<div class="share_model" style="display:none;">
+			<div class="contents">
+				<div class="title">点击二维码长按保存</div>
+				<div id="qrcode_img">
+                	<img src="" data-preview-src="" data-preview-group="1" />
+              	</div>			
+						
+			</div>
+		</div>
+	</body>
+  	<script>
+    	$(function(){
+			$("#qrcode_img>img").attr("src",url+"/web/img/service.jpg");
+        	$.ajax({
+            	url: url + "/api/about/aboutimage",
+              	dataType: "JSON",
+              	success: function (res) {
+                	var data = res.data;
+                  	for(var i=0;i<data.length;i++){
+                    	var text = `<div style='background:url(${url}/uploads/${data[i].image});background-size:100% 100%;height:267px;text-align:center;'><button onclick='contect_service()'>客服微信</button></div><div class='content'>${data[i].brief}</div>`;
+                        $(".mui-content").html(text)
+                    }
+                }
+            })
+        });
+
+        function contect_service(){
+          $(".share_model").css("display","flex");
+        }
+		$(".share_model").click(function(){
+			$(".share_model").css("display","none");
+		});
+      	// 保存图片
+		mui.init({
+		    gestureConfig: {
+		        longtap: true
+		    }
+		});
+		
+		mui.previewImage();
+		
+		mui.plusReady(function() {
+		    document.addEventListener('longtap', function(e) {
+		        var target = e.target;
+		        savePic(target);
+		    });
+		});
+		/**
+		 * 长按保存图片
+		 * 1. 获取图片链接
+		 * 2. 创建下载并下载图片
+		 * 3. 保存至相册
+		 */
+		function savePic(target) {
+		    if(target.tagName == 'IMG' && target.currentSrc.length > 0 && target.classList.contains('mui-zoom')) { //确保图片链接不为空
+		        var imgUrl = target.src;
+		        console.log('图片地址：' + imgUrl);
+		        var suffix = cutImageSuffix(imgUrl);
+		        mui.confirm("是否保存此图片", "", ["保存", "取消"], function(event) {
+		            var index = event.index;
+		            if(index == 0) {
+		                /**
+		                 * 创建下载任务
+		                 * http://www.html5plus.org/doc/zh_cn/downloader.html#plus.downloader.createDownload
+		                 */
+		                var downLoader = plus.downloader.createDownload(imgUrl, {
+		                    method: 'GET',
+		                    filename: '_downloads/image' + suffix
+		                }, function(download, status) {
+		                    var fileName = download.filename;
+		                    console.log('文件名:' + fileName);
+		                    console.log('下载状态：' + status);
+		                    /**
+		                     * 保存至本地相册
+		                     */
+		                    plus.gallery.save(fileName, function() {
+		                        /**
+		                         * 保存后，弹出对话框是否查看；
+		                         */
+		                        mui.confirm("打开相册查看", "", ["打开", "取消"], function(event) {
+		                            var gindex = event.index;
+		                            if(gindex == 0) {
+		                                /**
+		                                 * 选择图片
+		                                 */
+		                                plus.gallery.pick(function(file) {
+		                                    mui.toast("你选择了图片：" + file);
+		                                }, function(error) {
+		                                    console.log(JSON.stringify(error));
+		                                }, {
+		
+		                                });
+		                            }
+		                        });
+		                    });
+		                });
+		                /**
+		                 * 开始下载任务
+		                 */
+		                downLoader.start();
+		            }
+		        });
+		    }
+		}
+		// 截取图片后缀用于重命名图片，防止%E5%85%89%E6%98%8E%E8%A1%8C编码的文件不被系统相册识别；
+		function cutImageSuffix(imageUrl) {
+		    var index = imageUrl.lastIndexOf('.');
+		    return imageUrl.substring(index);
+		}
+      
+    </script>
+	
+</html>

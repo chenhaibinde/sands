@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>文章详情</title>
+		<link rel="stylesheet" type="text/css" href="web/css/mui.min.css" />
+		<script src="web/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="web/js/jquery-2.2.4.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			body{width: 100%; }
+			h4{width: 100%; font-size: 14px;text-align: center;line-height: 22px;padding:0 10px;}
+			img{width: 100%;}
+			p{color: #444444;padding:0 10px;}
+			.laiyuan{font-size: 12px;display: flex;justify-content: space-between;color: #7f7f7f;line-height: 40px;padding:0 10px;}
+			.mui-content{background: white;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="javascript:history.back(-1);"></a>
+			<h1 class="mui-title">文章详情</h1>
+		</header>
+		<div class="mui-content"></div>	
+	</body>
+	<script type="text/javascript">
+		var id = window.location.href.split("id=")[1];
+		function artical_info(e) { //资讯详情
+			$.ajax({
+				url: url + "/api/consult/detail",
+				'dataType': 'json',	
+				data: {
+					id: id,
+					//uid: 203 //登录用户用户id
+				},
+				success: function(res) {
+					console.log(res);
+					var data = res.data;
+					var text = `<h4>${data.title}</h4>
+					<div class="laiyuan">
+						<span>来源：${data.source}</span>
+						<span class="time">${data.created_at}</span>
+					</div>
+					${data.content}
+					<img src="${url}/uploads/${data.pic}"/>`;
+					$(".mui-content").html(text);							
+				}
+				
+			})
+		};
+		artical_info();
+	</script>
+</html>

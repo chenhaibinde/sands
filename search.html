@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>搜索</title>
+		<script src="web/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+      	<link rel="stylesheet" type="text/css" href="web/css/mui.min.css" />
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			.nav {
+				text-decoration: none;
+				display: block;
+				background: #FFF;
+				padding: 5px;
+				margin-top: 5px;
+			}
+
+			body {
+				height: 100%;
+				background: #F1F1F3;
+			}
+			header {
+				position: fixed !important;
+				top: 0;
+			}
+			.header {
+				position: fixed;
+				top: 44px;
+				z-index: 500;
+				width: 100%;
+				padding: 10px;
+				background: #FFF;
+				box-sizing: border-box;
+			}
+
+			.search {
+				padding: 0 10px;
+				/* font-size: 12px; */
+				display: flex;
+				align-items: center;
+				background: #f4f4f4;
+				border-radius: 15px;
+				height: 28px;
+			}
+
+			.search img {
+				width: 18px;
+				height: 18px;
+			}
+
+			.search input {
+				width: 80%;
+				border: none;
+				background: #f4f4f4;
+				outline: none;
+				font-size: 12px;
+              	height: 25px;
+              	margin-top: 13px;
+			}
+
+			.search button {
+				width: 40px;padding:0;
+				height: 28px;
+				border: none;
+				background: #f4f4f4;
+				outline: none;
+			}
+			/* .search button:hover{color: #007AFF;} */
+			.search_info {
+				height: 82%;
+				top: 92px;
+				width: 100%;
+				padding: 0 8px;
+				box-sizing: border-box;
+				overflow: auto;
+				position: absolute;
+			}
+			.search_info>a{text-decoration: none;background: #FFF;display: block;margin: 5px 0;}
+			.supply {
+				width: 100%; 
+				display: flex;
+				justify-content: space-around;
+				align-items: center;
+			}
+
+			.supply .supply_img {
+				width: 25%;
+				text-align: center;
+			}
+
+			.supply .supply_img img {
+				width: 55px;
+				height: 55px;
+				margin-top: 5px;
+			}
+
+			.supply .supply_info {
+				width: 75%;
+			}
+
+			.supply .supply_info ul li {
+				line-height: 18px;
+			}
+
+			.supply .supply_info ul .text {
+				color: #555555;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				font-size: 14px;
+				font-weight: bold;
+			}
+
+			.supply .supply_info ul .address {
+				color: #999;
+				display: flex;
+				flex-wrap: wrap;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				font-size: 12px;
+			}
+
+			.supply .supply_info ul .address .addr {
+				width: 100%;
+				display: block;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+			}
+
+			.supply .supply_info ul .time {
+				color: #999;
+				font-size: 12px;
+			}
+		</style>
+	</head>
+	<body onkeyup="which_key(event)">
+      	<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="javascript:history.back(-1)"></a>
+			<h1 class="mui-title">搜索</h1>
+		</header>
+		<div class="header">
+			<div class="search" >
+				<img class="search_icon">
+				<input type="text" id="" value="" />
+				<button type="submit" class="" onclick="get_text()">搜索</button>
+			</div>
+		</div>
+		<div class="search_info"></div>
+	</body>
+	<script type="text/javascript">
+		function which_key(event){ //enter事件
+			if(event.keyCode == 13){
+				get_text();
+			};
+		};
+		$(function(){
+			$(".search_icon").attr("src",url+"/web/img/search_icon.png");
+		});
+		function get_text(){ //搜索
+			var text = $("input[type='text']").val();//获取文本内容
+			// console.log(text);
+			search(text);
+		};
+
+		function search(text){
+			$.ajax({
+				url: url + "/api/list/searchsupply",
+				dataType: 'json',
+				data: {
+					keyword: text
+				},
+				success: function(res) {
+					console.log(res);
+					var data = res.data;
+					var stick_supply = data.stick_supply;
+					var supply = data.supply;
+					if(stick_supply.length == 0 && supply.length == 0){
+						$(".search_info").empty();
+						mui.alert("暂无信息")
+						$("input[type='text']").val(""); //清空input值
+					};
+					if(stick_supply.length > 0){
+						var text = "";
+						for(var i=0;i<stick_supply.length;i++){
+							var time = stick_supply[i].saddtime;
+							var saddtime = getDateAfter(time);
+							var img = "";
+							if(stick_supply[i].mpic.indexOf("http") > -1){
+								img = `${stick_supply[i].mpic}`;
+							}else{
+								img = `${url}/${stick_supply[i].mpic}`;
+							}
+							text += `<a href="<a href="/sands/detail.html?is_special=null&type=1&id=${stick_supply[i].supply_id}">
+								<div class="supply">
+									<div class="supply_img"><img src="${img}"/></div>
+									<div class="supply_info">
+										<ul>
+											<li class="text">${stick_supply[i].desc.replace(/\d{7,}/g,'*')}</li>
+											<li class="address"><span class="addr">${stick_supply[i].saddress}</span></li>
+											<li class="address"><span class="time">${saddtime}</span></li>
+										</ul>
+									</div>
+								</div>
+							</a>`;
+						};
+						$(".search_info").append(text);
+					}else{
+						$(".search_info").empty(text);
+						// console.log("暂无置顶数据")
+					};
+					if(supply.length > 0){
+						var text = "";
+						for(var i=0;i<supply.length;i++){
+							var time = supply[i].saddtime;
+							var saddtime = getDateAfter(time);
+							var img = "";
+							if(supply[i].mpic.indexOf("http") > -1){
+								img = `${supply[i].mpic}`;
+							}else{
+								img = `${url}/${supply[i].mpic}`;
+							}
+							text += `<a href="/sands/detail.html?is_special=null&type=1&id=${supply[i].supply_id}">
+								<div class="supply">
+									<div class="supply_img"><img src="${img}"/></div>
+									<div class="supply_info">
+										<ul>
+											<li class="text">${supply[i].desc.replace(/\d{7,}/g,'*')}</li>
+											<li class="address"><span class="addr">${supply[i].saddress}</span></li>
+											<li class="address"><span class="time">${saddtime}</span></li>
+										</ul>
+									</div>
+								</div>
+							</a>`;							
+						};
+						$(".search_info").append(text);
+					}else{
+						$(".search_info").empty(text);
+						// console.log("暂无普通数据")
+					};
+					
+				}
+				
+			})
+		}
+		
+	</script>
+</html>

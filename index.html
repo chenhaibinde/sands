@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>首页</title>
+		<script src="web/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="web/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="web/js/Popt.js"></script>
+		<script type="text/javascript" src="web/js/city.json.js"></script>
+		<script type="text/javascript" src="web/js/citySet.js"></script>
+		<link href="web/css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="web/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="web/css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="web/css/home.css" />
+		<link rel="stylesheet" type="text/css" href="web/css/fabu_model.css" />
+		<script src="//3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var geolocation = new qq.maps.Geolocation("F75BZ-54UKV-6AGPT-UYF6Z-BLUBV-22BAE", "h5");
+				var options = {timeout: 8000};
+				geolocation.getLocation(showPosition, showErr, options);
+				// var lat='';
+				// var lng='';
+				function showPosition(position) {
+				    var info = JSON.stringify(position, null, 4);
+				    var lat = position.lat;
+					var lng = position.lng;
+					var city = position.city;
+					// console.log(lat)
+					// console.log(lng)
+					// console.log(position.city)
+					if(lat&&lng){
+						// 储存当前的经纬度
+						localStorage.setItem("lat",lat);
+						localStorage.setItem("lng",lng);
+						localStorage.setItem("city",city);
+						console.log(localStorage.getItem("lat"))
+						console.log(localStorage.getItem("lng"))
+						console.log(localStorage.getItem("city"))
+					}else{};
+				};
+				function showErr() {
+					// mui.alert('定位失败，请启用位置服务');
+				    console.log('定位失败，请启用位置服务');
+				};
+			});
+			// 将经纬度转成地理位置
+			showPositions();
+			function showPositions(position){ 
+			   //将我们获取到的经纬度保存到变量中
+			  var latlon = localStorage.getItem("lat")+','+localStorage.getItem("lng"); 
+			 
+			  //baidu接口
+			  var url = "http://api.map.baidu.com/geocoder/v2/?ak=ivcwm3ovL7B237Rto0K0IPFhovV8g0lb&callback=renderReverse&location="+latlon+"&output=json&pois=0";
+			  $.ajax({ 
+			    type: "GET", 
+			    dataType: "jsonp", 
+			    url: url, 
+			    beforeSend: function(){ 
+			      console.log("正在定位...");
+			    }, 
+				// 百度成功调用
+			    success: function (data) { 
+			      if(data.status==0){ 
+			         var address = data.result.formatted_address;
+					 console.log(address)
+			       } 
+			    }, 
+			    error: function (XMLHttpRequest, textStatus, errorThrown) { 
+			        mui.alert("地址位置获取失败"); 
+			    } 
+			  }); 
+			};
+			
+			
+			//筛选 
+			ajaxa();
+			function ajaxa(str) { //本地资讯
+				var lat1 = localStorage.getItem("lat")
+				var lng1 = localStorage.getItem("lng"); 
+				$.ajax({
+					'url': url + '/api/index/recsupply',
+					'data': {
+						address: str
+					},
+					dataType: 'json',
+					success: function(res) {
+						console.log(res);
+						var data = res.data[2].supply;
+						var address = res.data.address;
+						//console.log(str)
+						if(str == undefined){
+							$("#provinceSpan").text(address);
+						};
+						$("#citySpan").css("display", "none")
+						if (data.length == 0) {
+							// mui.alert("暂无信息")
+							$(".location_info").html("<div style='text-align:center;color:#999;margin-top:15px'>暂无本地信息</div>")
+							$(".location_info").css("margin","0px");
+						}else{
+							var zixun = '';
+							for (var i = 0; i < data.length; i++) {
+								if (data[i].mname == null) {
+									data[i].mname = '游客';
+								};
+								var img = data[i].mpic;
+								if(img.indexOf("http") > -1){
+									img = `${data[i].mpic}`;
+								}else{
+									img = `${url}/${data[i].mpic}`;
+								}
+								zixun +=
+									`<a href="/detail/index?id=${data[i].supply_id}">
+							            <div class="supply">							
+							                <div class="supply_img">
+							                    <img src="${img}"/>
+							                </div>
+							                <div class="supply_info">
+							                    <ul>
+							                      <li class="title">
+							                        <div>${data[i].mname}</div>
+							                        <div class="getphone">
+							                                <a href="tel:${data[i].phone}"><img src="${url}/web/img/phone_call.png"/><span>拨打电话＞</span></a>
+							                        </div>
+							                      </li>
+							                    </ul>
+							                </div>							
+							            </div>
+							            <div class="desc">${data[i].desc.replace(/\d{7,}/g, '*')}</div>
+							            <div class="times">
+							              <span>${data[i].saddtime.split(" ")[0]}</span>&nbsp;&nbsp;
+							              <span><span style="color:#007AFF;font-style:normal">${data[i].click}</span>人浏览</span>
+										  <span>离你<span class="distance">${distance(lat1,lng1,data[i].lat,data[i].lng)}km</span></span>
+							            </div>
+							        </a>`;
+							};
+							$(".location_info").html(zixun);
+						}
+						
+						// var geolocation = new qq.maps.Geolocation("F75BZ-54UKV-6AGPT-UYF6Z-BLUBV-22BAE", "h5");
+						// var options = {
+						// 	timeout: 8000
+						// };
+						// geolocation.getLocation(showPosition, showErr, options);
+
+						// var lat1 = 0;
+						// var lng1 = 0;
+						//position
+						// function showPosition(position) {
+
+						// 	var info = JSON.stringify(position, null, 4);
+						// 	lat = position.lat;
+						// 	lng = position.lng;
+
+						// 	var id_str = '';
+						// 	var i = 0;
+						// 	$(".distance").each(function() {
+						// 		var id = parseInt($(this).attr('data-id'));
+						// 		if (i == 0) {
+						// 			id_str = id;
+						// 		} else {
+						// 			id_str += ',' + id;
+						// 		}
+						// 		i++;
+						// 	});
+
+						// 	$.ajax({
+						// 		type: "GET",
+						// 		url: '/list/supply',
+						// 		cache: false,
+						// 		dataType: 'json', //接受数据格式
+						// 		data: "action=distance&id_str=" + id_str + "&lat=" + lat + "&lng=" + lng,
+						// 		success: batchResponse
+						// 	});
+						// };
+
+						// function showErr() {
+						// 	//alert('定位失败，请启用位置服务。');
+						// }
+					}
+
+				})
+			};
+			
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function() {				
+				var geolocation = new qq.maps.Geolocation("F75BZ-54UKV-6AGPT-UYF6Z-BLUBV-22BAE", "h5");
+				var options = {
+					timeout: 8000
+				};
+				geolocation.getLocation(showPosition, showErr, options);
+
+				var lat1 = 0;
+				var lng1 = 0;
+				//position
+				function showPosition(position) {
+
+					var info = JSON.stringify(position, null, 4);
+					lat = position.lat;
+					lng = position.lng;
+
+					var id_str = '';
+					var i = 0;
+					$(".distance").each(function() {
+						var id = parseInt($(this).attr('data-id'));
+						if (i == 0) {
+							id_str = id;
+						} else {
+							id_str += ',' + id;
+						}
+						i++;
+					});
+
+					$.ajax({
+						type: "GET",
+						url: '/list/supply',
+						cache: false,
+						dataType: 'json', //接受数据格式
+						data: "action=distance&id_str=" + id_str + "&lat=" + lat + "&lng=" + lng,
+						success: batchResponse
+					});
+
+				}
+
+				function showErr() {
+					//alert('定位失败，请启用位置服务。');
+				}
+			});
+
+			// function batchResponse(res) {
+			// 	if (res.error == 0) {
+			// 		var obj = res.list;
+			// 		var length = obj.length;
+			// 		for (var i = 0; i < length; i++) {
+			// 			var id = obj[i]['id'];
+			// 			var distance = obj[i]['distance'];
+			// 			$(".distance_" + id).html(distance);
+			// 		}
+			// 	} else {
+
+			// 	}
+			// }
+		</script>
+		<style type="text/css">
+			.mui-bar {
+				background-color: #FFF;
+				box-shadow: 0 0 1px rgba(0, 0, 0, .15);
+			}
+
+			#addressPicker>a {
+				color: #FF870E;
+			}
+
+			a {
+				text-decoration: none;
+				color: #555;
+				font-size: 12px;
+			}
+
+			#addressPicker {
+				text-align: right;
+			}
+
+			.mui-poppicker-header .mui-btn {
+				border: none;
+				background: none;
+				font-size: 16px;
+			}
+
+			.mui-poppicker-btn-ok {
+				color: #008000;
+			}
+
+			.mui-picker {
+				background-color: #FFF;
+			}
+
+			.mui-pciker-list,
+			.mui-pciker-rule {
+				margin-top: 0;
+				top: 15%;
+			}
+
+			.mui-pciker-list li {
+				font-size: 12px;
+			}
+
+			.mui-pciker-rule-ft {
+				border-top: none;
+			}
+
+			.mui-poppicker-body {
+				height: 200px;
+			}
+
+			.mui-poppicker-header {
+				background: #FFF;
+			}
+		</style>
+		<script language="javascript">
+			// 本地资讯未查看数量
+			refreshCount();
+			function refreshCount(uid) {
+				$.ajax({
+					url: "/api/index/unreadcount",
+					dataType: 'json',
+					type: "GET",
+					data: {
+						uid: uid
+					},
+					beforeSend: function() {},
+					complete: function(result) {},
+					success: function(result) {
+						if (result.no_read_count > 0) {
+							$("#msg_count").html(result.no_read_count).show()
+						} else {
+							$("#msg_count").html(0).hide()
+						}
+					},
+					error: function() {}
+				});
+			}
+			window.setInterval("refreshCount()", 10000);
+		</script>
+	</head>
+	<body>
+		<nav id="home_tarbar" class="mui-bar mui-bar-tab">
+			<a class="mui-tab-item mui-active" href="/sands/index.html">
+				<div><img id="tabBar_pic" width="22px" /></div>
+				<span class="mui-tab-label">首页</span>
+			</a>
+			<a class="mui-tab-item" href="/sands/issueshow.html">
+				<div><img id="tabBar_icon2" width="22px" /></div>
+				<span class="mui-tab-label">发布</span>
+			</a>
+			<a class="mui-tab-item" href="/sands/consult.html">
+				<div><img id="tabBar_icon3" width="22px" /></div>
+				<span class="mui-tab-label">资讯</span>
+				<i id="msg_count" style="display:none">0</i>
+			</a>
+			<a class="mui-tab-item" href="/sands/meindex.html">
+				<div><img id="tabBar_icon4" width="22px" /></div>
+				<span class="mui-tab-label">我的</span>
+			</a>
+		</nav>
+		
+
+		<div class="mui-content" style="background: #f3f3f3 !important;">
+			<!--首页page1-->
+			<div id="page1" class="mui-control-content mui-active">
+				<div class="liulan_sum" style="display: flex;height: 25px;align-items: center;background: #007AFF;">
+					<img style="width: 14px;height: 14px;margin-left: 10px;">
+					<div style="padding-left: 7px;color:#FFFFFF;font-size:11px;">总浏览量：<span class="sum_liulan"></span></div>
+				</div>
+				<!-- 搜索 -->
+				<div class="go_fabu drag" id="drag" style="z-index:6000;">
+					<a href="/sands/search.html"><img class="search_icon"></a>
+				</div>
+				<!--轮播区-->
+				<div class="banner" id="banner">
+					<div class="container">
+						<div class="carousel slide" id="slidershow" data-ride="carousel" data-interval="2000">
+							<!--计数器-->
+							<ol class="carousel-indicators"></ol>								
+							<!--图片容器-->
+							<div class="carousel-inner"></div>							
+						</div>
+					</div>
+				</div>
+				<!-- 广告滚动位 -->
+				<div class="is_show"></div>
+				<!--供应列表区-->
+				<div class="supply_list" style="background: #FFFFFF;"></div>				
+				<!--二手车供应图片-->
+				<div class="car_img"></div>
+				<!-- 本地信息头部筛选 -->
+				<div style="line-height: 30px;display:flex;align-items:center;justify-content:space-between;background:#FFF;padding:0 10px;">
+					<div style="font-size: 15px;font-weight: bold;color:#1b1b1b;">本地资讯</div>
+					<div style="font-size: 12px;color:#FF870E;width:100px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;text-align:right;"
+					 id="city">
+						<span class="spancolor" id="provinceSpan">陕西省</span>
+						<span class="spancolor" id="citySpan">西安市</span>
+						<span class="spancolor" id="address1Span" style="display:none;">雁塔区</span>＞
+					</div>
+				</div>
+				<!-- 本地信息列表 -->
+				<div class="location_info"></div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		$("#city").click(function(e) { //调用地区选择
+			SelCity(this, e);
+		});
+		$(".getphone").click(function(e) {
+			e.preventDefault();
+		});
+		$(function() {
+			$("#tabBar_pic").attr("src",url+"/web/img/tabBar1_1.png");
+			$("#tabBar_icon2").attr("src",url+"/web/img/tabBar2_1.png");
+			$("#tabBar_icon3").attr("src",url+"/web/img/tabBar3_1.png");
+			$("#tabBar_icon4").attr("src",url+"/web/img/tabBar4_1.png");
+			$(".liulan_sum>img").attr("src",url+"/web/img/5-121204193955-50.gif");
+			$(".search_icon").attr("src",url+"/web/img/quick_search.png");
+			$(".carousel-indicators li").eq(0).addClass("active"); //轮播图
+			$(".carousel-inner div").eq(0).addClass("active");
+			if ($("#home_tarbar>a").hasClass("mui-active")) {
+				document.getElementById('tabBar_pic').src = url+"/web/img/tabBar1.png";
+				$("#home_tarbar>.mui-active span").css("color", "#007AFF");
+			};
+
+		});
+		function settings(e) { //标题等设置
+			$.ajax({
+				url: url + "/api/index/settings",
+				dataType: 'json',
+				success: function(res) {
+					console.log(res);
+					var data = res.data;
+					$(".sum_liulan").text(data.view);
+					$("title").text(data.title);
+					$(".textspace").text(data.SlidingWords);
+					var one_price = localStorage.setItem("price",data.one_price);
+					if(data.is_show == 0){ //0-显示 1-隐藏
+						var text = `<div class="advice" style="align-items:center;">
+							<img style="width: 18px;height: 18px;margin-left: 10px;" src="${url}/web/img/font_icon.png">
+							<marquee direction="left" behavior="scroll" scrollamount="3">
+								<span class="textspace">${data.SlidingWords}</span>
+							</marquee>
+						</div>`;
+						$(".is_show").html(text)
+					}else{
+						console.log("不显示广告滚动");
+					};
+				}
+			});
+		};
+		settings();
+		function banner(e) {
+			$.ajax({
+				url: url + "/api/index/banner",
+				dataType: 'json',				
+				success: function(res) {
+					// console.log(res);
+					var data = res.data;
+					var text = "";
+					var indicators = '';
+					for(let i=0;i<data.length;i++) {
+						var img = url + '/uploads/' + data[i].image_path;
+						text += `<div class='item'><img src='${img}' /></div>`;
+						indicators += `<li data-target='#slidershow' data-slide-to=${data[i].id-1}></li>`;
+						$(".carousel-indicators").html(indicators);							
+						$(".carousel-inner").html(text);						
+					};
+					$(".carousel-indicators li").eq(0).addClass("active");
+					$(".carousel-inner div").eq(0).addClass("active");
+				}
+				
+			})
+		};
+		banner();
+		function supply_type(e) { //十个分类
+			$.ajax({
+				url: url + "/api/index/type",
+				dataType: 'json',				
+				success: function(res) {
+					// console.log(res);
+					var data = res.data;
+					var text = "";
+					for(var i=0;i<data.length;i++) {
+						var img = url + "/uploads/" + data[i].icon;
+						text += `<div class='list1'>
+							<a href='/sands/supply.html?is_special=${data[i].is_special}&id=${data[i].id}'>
+								<ul>
+									<li><img src='${img}' /></li>
+									<li>${data[i].name}</li>
+									<li class='num'>(${data[i].al})</li>
+								</ul>
+							</a>
+						</div>`;
+						$(".supply_list").html(text);
+						
+					}
+					
+				}
+				
+			})
+		};
+		supply_type();
+		
+		function cars(e) { //二手车
+			$.ajax({
+				url: url + "/api/index/s_type",
+				dataType: 'json',				
+				success: function(res) {
+					console.log(res);
+					var data = res.data;
+					var text = "";
+					for(var i=0;i<data.length;i++) {
+						var img = url +"/uploads/"+ data[i].icon;
+						text += `<a href='/sands/supply.html?is_special=null&id=${data[i].id}'>
+								<img src='${img}' />
+							</a>`;
+						$(".car_img").html(text);							
+					};	
+				}				
+			});
+		};
+		cars();
+		
+		function unreadcount(e) { //本地资讯未查看数量
+			$.ajax({
+				url: url + "/api/index/unreadcount?uid=203",
+				dataType: 'json',				
+				success: function(res) {
+					//console.log(res);
+					var data = res.data;		
+				}
+				
+			})
+		};
+		// unreadcount();
+
+		
+	</script>
+
+</html>

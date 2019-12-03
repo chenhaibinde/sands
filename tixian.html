@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>钱包提现</title>
+		<script src="web/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="web/css/mui.min.css"/>
+		<style type="text/css">
+			body{background: #f1f1f3;}
+			input{border: none !important;color: #6d6d6d;font-size:13px;padding: 0 !important;height: 32px !important;}
+			.tixian{height: 125px;width: 100%;background: #FFF;margin-top: 10px;padding: 6px 12px; box-sizing: border-box;}
+			.tixian div{height: 36px; line-height:36px;font-size: 13px;}
+			.tixian .title{ color: #282828;}
+			.tixian .input{border-bottom: 1px solid #f2f2f2;}
+			.tixian .use_money{font-size: 11px; color: #979696;}
+			.submit{padding: 10px 0;}
+			button{font-size: 15px;color: #d4e2ff;background: #007AFF;width: 84%;border-radius: 20px;margin-left: 8%;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">钱包提现</h1>
+		</header>
+		<div class="mui-content">
+			<!-- <form action='/me/agentWithdraw' method="post"> -->
+			  <div class="tixian">
+			    <div class="title">提现金额</div>
+			    <div class="input">
+			    	<input type="number" name='money' placeholder="请输入提现金额,金额最低0元" required="required"></input>
+			    </div>
+			    <div class="use_money">可用金额10元</div>
+			  </div>
+			  <div class="submit"><button type='submit'>提现</button></div>
+			<!-- </form> -->
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(".mui-action-back").click(function(){
+			window.location.href = "/sands/mewallet.html"; //返回上个页面
+		});
+		$("button[type='submit']").click(function(){
+			var number = $("input[type='number']").val();
+			var wallect = 10; //钱包余额
+			var agentId = 1; //代理人ID
+			// console.log(number)
+			if(number == ""){
+				mui.alert("请输入提现金额")
+			}else if(number>wallect){
+				mui.alert("钱包余额不足")
+			}else{
+				withdrawall(number,agentId);
+			}
+		});
+		function withdrawall(number,agentId){ //提现
+			$.ajax({
+				url: url + '/api/me/agentwithdraw' ,
+				dataType: 'json',
+				method: 'GET',
+				data: {
+					money: number,
+					agentId: agentId
+				},
+				success: function(res){
+					console.log(res)
+					if(res.status == 0){
+						mui.alert(res.msg)
+					}else{
+						mui.alert("提现成功");
+						// window.location.href = "/sands/mewallet.html";
+					}
+				},
+				error: function (err){
+					console.log(err)
+				}
+			});
+		}
+	</script>
+</html>

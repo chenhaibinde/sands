@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>查看反馈</title>
+		<script src="web/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+      	<link rel="stylesheet" type="text/css" href="web/css/mui.min.css" />
+		<style type="text/css">
+			*{padding:0;margin:0;}
+			ul,li{list-style:none;padding:0;margin:0;}
+			.list{border-bottom:5px solid #f3f3f3;padding:5px 12px;font-size:12px;}
+			.list li{border-bottom: 1px solid #f3f3f3;line-height: 35px;display:flex;flex-wrap;wrap;}
+			.list li:nth-last-child(1){border-bottom:none;border-bottom:none;}
+			.list li .title{display:block;width:20%;}
+			.list li span:nth-of-type(2){display:block;width:80%;}
+		</style>
+	</head>
+	<body>
+      	<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="/me/advice"></a>
+			<h1 class="mui-title">反馈意见</h1>
+		</header>
+		<div class="mui-content">
+			<!-- <ul class="list">
+				<li><span class="title">反馈类型:</span><span>{feedback_type}</span></li>
+				<li><span class="title">反馈时间:</span><span>{addtime}</span></li>
+				<li><span class="title">反馈内容:</span><span>{text}</span></li>
+				<li><span class="title">反馈结果:</span><span>{reply_text}</span></li>
+				<li><span class="title">回复时间:</span><span>{reply_addtime}</span></li>
+			</ul> -->
+		</div>
+	</body>
+	<script type="text/javascript">
+		show_feedback();
+		function show_feedback(e) {
+			$.ajax({
+				url: url + "/api/me/show_feedback",
+				dataType: 'json',
+				success: function(res) {
+					console.log(res);
+					var data = res.data;
+					if(res.msg == "请登录"){
+						mui.alert(res.msg)
+					}else{
+						var text = "";
+						for(var i=0;i<data.length;i++){
+							var reply_text = data[i].reply_text;
+							var reply_addtime = data[i].reply_addtime;
+							if(reply_text == ""){
+								reply_text = "未回复"
+							};
+							if(reply_addtime == ""){
+								reply_addtime = "暂无"
+							};
+							text += `<ul class="list">
+								<li><span class="title">反馈类型:</span><span>${data[i].feedback_type}</span></li>
+								<li><span class="title">反馈时间:</span><span>${data[i].addtime}</span></li>
+								<li><span class="title">反馈内容:</span><span>${data[i].text}</span></li>
+								<li><span class="title">反馈结果:</span><span>${data[i].reply_text}</span></li>
+								<li><span class="title">回复时间:</span><span>${data[i].reply_addtime}</span></li>
+							</ul>`;
+						};
+						$(".mui-content").html(text);
+					};
+				}
+			});
+		};
+	</script>
+</html>

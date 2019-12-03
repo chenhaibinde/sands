@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<!-- <meta name="csrf-token" content="{{ csrf_token() }}"> -->
+		<title>用户登录</title>
+		<link rel="stylesheet" type="text/css" href="web/css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="web/css/login.css"/>
+		<link rel="stylesheet" type="text/css" href="web/css/bootstrap.min.css">
+		<script src="web/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="web/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+      	<style type="text/css">
+          .mui-action-back:hover{text-decoration: none;}
+          .daili{width:100%;text-align:center;font-size:14px;font-weight:bold;color:#007AFF;margin-top: -20px;}
+          .login1{width: 100%;height: 105px;}
+          .login2{width: 68px;height: 68px;border-radius:50%;}
+          .head_icon{width:100%;text-align:center;position:relative;top:-40px;}
+          .login-form{margin-top:25px;}
+          .li{display: flex;justify-content: center;align-items: center;font-size: 14px;line-height: 45px;}
+          .li span{width:60px;display:block;}
+          input[type=password],input[type=text]{border:none;background:none;border-bottom: 1px solid #e2e2e2 !important;font-weight: 500;font-size: 14px;padding: 4px 0;width: 59%;margin-bottom:0px;}
+          input[type=submit]{border-radius:20px;width:78%;}
+          input[type=checkbox]{height: 16px;width: 16px;background:#FFF;}
+          .submit{display: flex;justify-content: center;margin-top:28px;}
+          .modal-dialog{margin:0;}
+          .modal-content{border:none;border-radius:0px;height:100%;}
+        </style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="/sands/loginchoose.html"></a>
+			<h1 class="mui-title">用户登录</h1>
+		</header>
+		
+		<div class="mui-content main" style="padding-top:43px;">
+          	<div>          
+            	<img class="login1" src="" alt="">
+			</div>
+          	<div class="head_icon">          
+            	<img class="login2" src="" alt="">
+			</div>
+          	<div class="daili" style="display:none;">代理商登录</div>
+			<div class="login-form">
+				<div class="li">
+					<span>用户名</span>
+					<input type="text" name="account" class="text" required="required" placeholder="请输入用户名称" >	
+				</div>
+				<div class="li">
+					<span>密码</span>
+					<input type="password" value="" name="pass" placeholder="请输入用户密码" required="required">
+				</div>
+				<!-- 获取当前地址 -->
+				<input type="hidden" name="address" value=""/>
+				<div class="submit">
+					<input type="submit" value="登&nbsp;录" >
+				</div>
+				<div style="display: flex;height: 30px;align-items: center;font-size: 12px;justify-content: center;margin-top:3px;color: #B0B0B0;">
+					<input type="checkbox">
+					<div style="color: #888;margin-left:3px;">我已阅读并同意</div>
+					<span style="color:#1B9DFE;" data-toggle="modal" data-target="#law">法律协议</span>
+				</div>
+				<div class="modal fade" id="law" tabindex="-1" role="dialog" style="padding-right: 5%;">
+					<div class="modal-dialog" style="height: 100%;">
+						<div class="modal-content">	
+												
+							<div class="modal-body" style="height:85%;overflow:auto;">
+									
+							</div>
+							<div class="modal-footer" style="text-align: center;">
+								<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>						
+								<!-- <button type="button" class="btn btn-primary"><a href="my_vip.html">成为VIP会员</a></button>																					 -->
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<script type="text/javascript">
+			$(".login1").attr("src",url+"/web/img/back1.png");
+			$(".login2").attr("src",url+"/web/img/head_icon.png")
+			var account = localStorage.getItem("account"); //注册时储存的账号城市
+			var chengshi = localStorage.getItem("chengshi");
+			if(account){
+				$("input[type='text']").val(account);
+			};
+			if(chengshi){
+				$("input[name='address']").val(chengshi);
+			};
+			var identity = window.location.href.split("identity=")[1];
+			if(identity == 'daili'){
+				$(".daili").css("display","block");
+			};
+
+			// $.ajaxSetup({
+			//     headers: {
+			//         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			//     }
+			// });
+			
+			// @if($status==0)
+			// 	alert('登录失败');
+			// @endif
+			function settings(e) { //标题等设置
+				$.ajax({
+					url: url + "/api/index/settings",
+					dataType: 'json',				
+					success: function(res) {
+						// console.log(res);
+						var data = res.data;
+						$(".modal-body").html("<p>"+data.agreement+"</p>");
+						
+					}
+					
+				})
+			};
+			settings();
+
+			// $("input[type='hidden']").val(address);
+			$("input[type='submit']").click(function(){
+				var name = $("input[type='text']").val();
+				var pass = $("input[type='password']").val();
+				var address = $("input[name='address']").val();
+				if($("input[type='checkbox']").prop("checked")){
+					if(name == ""){
+						mui.alert("请填写用户名称")
+					}else if(pass == ""){
+						mui.alert("请填写用户密码")
+					}else if(address == ""){
+						mui.alert("请打开地理定位")
+					}else{
+						login(name,pass,address);
+					};
+					return true;
+				//如果没有选中
+				}else{
+					mui.alert("请同意法律协议");
+					return false;
+				};							
+			});
+			function login(name,pass,address) { //登录
+				$.ajax({
+					url: url + "/api/login/login",
+					data: {
+						account: name,
+						pass: pass,
+						address: address
+					},
+					dataType: 'json',
+					method: 'POST',
+					success: function(res) {
+						console.log(res);
+						if(res.status == 1 && res.msg == '请求成功') {
+							var token = res.data;
+							localStorage.setItem("token",token); //登陆成功存储token
+							console.log(localStorage.getItem("token"))
+							mui.alert(res.msg)
+							window.location.href = "/sands/meindex.html";
+						}else{
+							mui.alert(res.msg)
+						};
+						
+						
+					}
+					
+				});
+			};
+
+		</script>
+	</body>
+</html>

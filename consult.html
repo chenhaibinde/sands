@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>沙石信息发布平台</title>
+		<link href="web/css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="web/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="web/css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="web/css/home.css" />
+		<link rel="stylesheet" type="text/css" href="web/css/fabu_model.css" />
+		<script src="web/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="web/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			#tab4 {
+				padding: 0;
+			}
+
+			.mui-bar {
+				background-color: #FFF;
+				box-shadow: 0 0 1px rgba(0, 0, 0, .15);
+			}
+
+			a:hover {
+				color: #000 !important;
+			}
+
+			body {
+				background: #f1f1f2;
+			}
+
+			.mui-content {
+				background: none;
+			}
+
+			.nav-tabs>li.active>a {
+				border: none !important;
+				border-bottom: 1.5px solid #007AFF !important;
+				color: #007AFF !important;
+			}
+
+			.nav-tabs {
+				border-bottom: 1px solid #FFF;
+				backgorund: #FFF;
+			}
+
+			.list .title {
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+				width: 80% !important;
+			}
+		</style>
+		<!-- <script language="javascript">
+			refreshCount();
+		
+			function refreshCount() {
+				$.ajax({
+					url: "/api/index/unreadcount",
+					dataType: 'json',
+					type: "GET",
+					data: 'uid={{ $uid }}',
+					beforeSend: function() {},
+					complete: function(result) {},
+					success: function(result) {
+						if (result.no_read_count > 0) {
+							$("#msg_count").html(result.no_read_count).show()
+						} else {
+							$("#msg_count").html(0).hide()
+						}
+					},
+					error: function() {}
+				});
+			}
+			window.setInterval("refreshCount()", 10000);
+		</script> -->
+	</head>
+	<body>
+		<nav id="home_tarbar" class="mui-bar mui-bar-tab">
+			<a class="mui-tab-item" href="/sands/index.html">
+				<div><img id="tabBar_icon1" src="" width="22px" /></div>
+				<span class="mui-tab-label">首页</span>
+			</a>
+			<a class="mui-tab-item" href="/sands/issueshow.html">
+				<div><img id="tabBar_icon2" src="" width="22px" /></div>
+				<span class="mui-tab-label">发布</span>
+			</a>
+			<a class="mui-tab-item mui-active" href="/sands/consult.html">
+				<div><img id="tabBar_pic" src="" width="22px" /></div>
+				<span class="mui-tab-label">资讯</span>
+			</a>
+			<a class="mui-tab-item" href="/sands/meindex.html">
+				<div><img id="tabBar_icon4" src="" width="22px" /></div>
+				<span class="mui-tab-label">我的</span>
+			</a>
+		</nav>
+		
+		<div class="mui-content">
+			<div id="page4" class="mui-control-content mui-active">
+				<!--<header class="mui-bar mui-bar-nav">			
+					<h1 class="mui-title">我的资讯</h1>
+				</header>-->
+				<!--视频文章列表-->
+				<div class="tab mui-content" style="margin-top:0px;">
+					<ul id="myTab" class="nav nav-tabs" style="background:#FFF;">
+						<!-- @foreach ($consulttype as $consulttype_one)
+						<li @if ($ctid == $consulttype_one->id) class="active" @endif><a href="/consult?ctid={{ $consulttype_one->id }}">{{ $consulttype_one->name }}</a></li>					
+						@endforeach -->
+						<!-- <li><a href="#tab2" data-toggle="tab">励志故事</a></li>	-->
+					</ul>
+
+					<div id="myTabContent" class="tab-content">
+						<!--生活百科-->
+						<!-- @foreach ($consult as $consult_one)
+						<div class="tab-pane fade in active" id="tab1" style="display: flex;padding:0px;hieght:165px;margin:0px;">
+							<div class="list" style="background:#FFF;margin-top:10px;width:100%;">
+								
+								视频展示
+								@if ($consult_one->style == 1)
+								<div class="video">									
+									<a href="/consult/detail?id={{ $consult_one->id }}"><img style="width: 100%;height:150px;" src="/uploads/{{ $consult_one->pic }}"/></a>
+								</div>
+								@else
+								<div class="video">									
+									<video style="width: 100%;height:150px;" controls src="/uploads/{{ $consult_one->pic }}"/>
+								</div>
+								@endif
+								<div style="display: flex;line-height: 35px;align-items: center;justify-content: space-between;padding:0 10px;box-sizing:border-box;">
+									视频标题展示
+									<div class="title" style="font-size: 12px;">{{ $consult_one->title }}</div>
+									视频添加时间展示
+									<div class="" style="color:#727272;font-size:12px;">
+										<span></span>
+									</div>
+								</div>
+							</div>														
+						</div> 
+						@endforeach-->
+
+						<!--新乡新闻-->
+						<!-- <div class="tab-pane fade" id="tab3">							 
+							<div class="list">
+								<div class="title">新乡新闻标题</div>
+								<div class="video">									
+									<img src="img/banner_3.png"/>
+								</div>
+								<div class="add_time">
+									<span>5小时</span>前
+								</div>
+							</div>     
+						</div>	 -->
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</body>
+	<script>
+		$(function() {
+			$("#tabBar_icon1").attr("src",url+"/web/img/tabBar1_1.png");
+			$("#tabBar_icon2").attr("src",url+"/web/img/tabBar2_1.png");
+			// $("#tabBar_pic").attr("src",url+"/web/img/tabBar3_1.png");
+			$("#tabBar_icon4").attr("src",url+"/web/img/tabBar4_1.png");
+			if ($("#home_tarbar>a").hasClass("mui-active")) {
+				$("#tabBar_pic").attr("src",url+"/web/img/tabBar3.png");
+				$("#home_tarbar>.mui-active span").css("color", "#007AFF");
+			};
+
+			function getconsult(e) { //本地资讯标题
+				$.ajax({
+					url: url + "/api/consult/getconsult",
+					dataType: 'json',
+					success: function(res) {
+						//console.log(res);
+						var data = res.data;
+						var title = '';
+						for (var i = 0; i < data.length; i++) {
+							title += `<li><a href="#tab${data[i].id}">${data[i].name}</a></li>`;
+							$("#myTab").html(title);
+
+						};
+						$("#myTab>li").eq(0).addClass('active');
+						if (data.length > 0) {
+							consult(data[0].id);
+						};
+						$("#myTab>li").click(function(e) {
+							$("#myTab>li").siblings().removeClass('active');
+							$(this).addClass('active');
+							var index = $(this).find('a').attr('href').split('tab')[1];
+							consult(index);
+						})
+					}
+				});
+			};
+			getconsult();
+
+			function consult(e) { //本地资讯列表
+				$.ajax({
+					url: url + "/api/consult/index?ctid=" + e,
+					dataType: 'json',
+					success: function(res) {
+						// console.log(res);
+						var data = res.data;
+						var list = '';
+						for (var i = 0; i < data.length; i++) {
+							var img = url + '/uploads/' + data[i].pic;
+
+							
+							var time = data[i].created_at;
+							var created_at = getDateAfter(time);
+							// <a href="${url}/consult/detail?id=${data[i].id}">
+							list +=
+								`<div class="tab-pane fade" id="tab${e}">
+								<div class="list" style="background:#FFF;margin-top:10px;">
+									<div class="video">
+										<a href="/sands/consultshow.html?id=${data[i].id}">
+											<img src="${img}"
+										</a>
+									</div>
+									<div style="display: flex;line-height: 35px;align-items: center;justify-content: space-between;padding:0 10px;box-sizing:border-box;">
+										<div class="title" style="font-size: 12px;">${data[i].title}</div>
+										<div style="color:#727272;font-size:12px;">
+											<span>${created_at}</span>
+										</div>
+									</div>
+								</div>     
+							</div>`;
+
+						}
+						$("#myTabContent").html(list);
+						$("#myTabContent>div").addClass('in active')
+
+					}
+
+				})
+			};
+
+
+		})
+	</script>
+</html>

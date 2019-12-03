@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>我的发布</title>
+		<link rel="stylesheet" type="text/css" href="web/css/mui.min.css"/>		
+		<link rel="stylesheet" type="text/css" href="web/css/my_apply.css"/>
+      	<script src="web/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+          .time{float:right;}
+          .modify,.delete{border: 1px solid #a0a0a0;border-radius: 3px;color: #999;padding:0 5px;}
+          .modify:hover{background:#007AFF;border:none;color:#FFF;}
+          .delete:hover{background:#007AFF;border:none;color:#FFF;}
+          .delete{margin-left:5px;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="javascript:history.back(-1);"></a>
+			<h1 class="mui-title">我的发布</h1>
+		</header>
+		
+		<div class="mui-content">
+			<!-- <a href="/detail/index?id={{ $result_one->id }}">
+				<div class="supply">							
+					<div class="supply_img"><img src="pic"/></div>
+					<div class="supply_info">
+						<ul>
+							<li class="text">desc</li>
+							<li class="address"><span class="addr">add</span></li>
+							<li style="color:#999;line-height:18px;z-index:1000;">
+							  <span><a class="modify" href="/me/editsupply?id={{$result_one->id}}">修改</a></span>
+							  <span><a class="delete" href="/me/deletesupply?id={{$result_one->id}}">删除</a></span>
+							  <span class="time"></span></li>
+						</ul>
+					</div>
+				</div>
+			</a> -->
+		</div>
+		
+				
+	</body>
+	<script type="text/javascript">
+		function my_issue(e) { //我的发布
+			$.ajax({
+				url: url + "/api/me/supply",
+				dataType: 'json',
+				success: function(res) {
+					if(res.status == 1){
+						var data = res.data.data;
+						if(data.length == 0){
+							mui.alert('暂无信息');
+						}else{
+							var text = "";
+							for(var i=0;i<data.length;i++){
+								var imgall = data[i].pic.split(',')[0];
+								var time = data[i].addtime;
+								var addtime = getDateAfter(time);
+								text += `<a href="/sands/detail.html?is_special=${data[i].is_special}&type=1&id={{ $result_one->id }}">
+									<div class="supply">
+										<div class="supply_img"><img src="${url}/${data[i].pic}"/></div>
+										<div class="supply_info">
+											<ul>
+												<li class="text">${data[i].desc.replace(/\d{7,}/g,"*")}</li>
+												<li class="address"><span class="addr">data[i].address</span></li>
+												<li style="color:#999;line-height:18px;z-index:1000;">
+												  <span><a class="modify" href="/sands/issue.html?is_special=${data[i].is_special}&id=${data[i].id}">修改</a></span>
+												  <span><a class="delete" href="${data[i].id}">删除</a></span>
+												  <span class="time">${data[i].addtime}</span>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</a>`;
+								
+							};
+							$(".mui-content").html(text);
+						};
+						
+					}else{
+						mui.alert(res.msg);
+					}
+				}				
+			});
+		};
+		my_issue();
+		$(".delete").click(function(){
+			var id = $(this).attr("href");
+			console.log(id);
+			var btnArray = ['取消','确认'];
+			mui.confirm('提示','确认删除信息',btnArray,function(e){
+				if(e.index == 1){
+					del(id);
+				}else{
+					console.log("取消删除");
+				};
+			})
+			
+		});
+		function del(id){
+			$.ajax({
+				url: url + "/api/me/deletesupply",
+				dataType: 'json',
+				data: {
+				  id: id
+				},
+				success: function(res) {
+					console.log(res);
+					var data = res.data;
+				}
+			});
+		}
+	</script>
+</html>

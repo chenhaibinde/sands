@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>购买会员</title>
+		<link rel="stylesheet" type="text/css" href="web/css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="web/css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="web/css/my_vip.css" />
+		<link rel="stylesheet" type="text/css" href="web/css/bootstrap.min.css" />
+		<script src="web/js/jquery-2.2.4.js" type="text/javascript" charset="utf-8"></script>
+		<script src="web/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="web/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+            header a{text-decoration: none !important;}
+		   .modal-body{display: flex;justify-content: space-around;}
+		   .modal-body>div{width: 50%; text-align: center;}
+		   .modal-body>div:nth-of-type(1){border-right: 1px solid #C4C4C4;}
+		   .modal-body .img1{width: 60px; height: 50px;}
+		   .modal-body .img2{width: 50px; height: 50px;}
+		   .modal-footer{padding: 0 15px;}
+           header a:link{color:#FFF !important;}
+		</style>
+	</head>
+	<body style="background:#f1f1f2;">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="javascript:history.back(-1);"></a>
+			<h1 class="mui-title">购买会员</h1>
+		</header>
+		<div class="upload">
+			<div class="Head"><img src="pic"/></div>
+			<div class="user_name">name</div>
+			<div class="vip_endtime"></div>
+		</div>
+		<div class="vip" id="vip"></div>
+		<div class="foot">
+			<div class="charge"><img src="" alt="" /> 收费标准</div>
+			<div class="prompt">(成为购买VIP会员，可免费发布信息，享受更优质的服务)</div>
+			<button class='buy' data-toggle='modal' data-target='#myModal'>立 即 购 买</button>
+			<div class="modal fade" id="myModal" aria-hidden="true">
+				<div class="modal-content" style="position: fixed;width:100%;bottom:0%;"> 
+					<div class="modal-header" style="color: #000;padding:10px;">请选择支付方式</div>
+					<div class="modal-body" style="padding:10px;">
+						<div>
+							<a href="javascript:void(0)">
+								<div><img class="img1 vip_weixin_buy" src=""/></div>
+								<div>微信</div>
+							</a>
+						</div>
+						<div>
+							<a href="javascript:void(0)">
+								<div><img class="img2 vip_alipay_buy" src=""/></div>
+								<div>支付宝</div>
+							</a>
+						</div>         
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="buy btn btn-default" data-dismiss="modal">关闭</button>
+					</div>
+				</div>
+				
+			</div>	       
+			
+	    </div>
+		
+			
+	</body>
+	<script>
+		$(function(){
+			$(".charge>img").attr("src",url+"/web/img/charge.png");
+			$(".vip_weixin_buy").attr("src",url+"/web/img/weixin_icon.jpg");
+			$(".vip_alipay_buy").attr("src",url+"/web/img/zhifubao_icon.jpg");
+		})
+		my_info();
+		function my_info(e) { //个人信息
+			$.ajax({
+				url: url + "/api/me/index",
+				dataType: 'json',
+				success: function(res) {
+					console.log(res);
+					var data = res.data;
+				}				
+			});
+		};
+		vip_list();
+		function vip_list(e) { //会员商品列表
+			$.ajax({
+				url: url + "/api/memberpricesettings",
+				dataType: 'json',
+				success: function(res) {
+					console.log(res);
+					var data = res.data;
+					var text = '';
+					for(var i=0;i<data.length;i++){
+						text += `<div class="thirty">
+							<a href="javascript:void(0);">
+								<ul class="${data[i].id}">
+									<li>${data[i].date}</li>
+									<li>￥ <span>${data[i].price}</span></li>
+									<li>${data[i].name}</li>
+								</ul>
+							</a>
+						</div>`;
+					};
+					$("#vip").html(text);
+					$('#vip a').click(function () {
+					    var index = this;
+					    $('#vip a').each(function () {  this.className = this == index ? 'actived':'noactive'});
+					});
+				}				
+			});
+		};
+        //会员支付宝点击事件
+        $(".vip_alipay_buy").click(function(){
+        	var alist=$(".thirty a");
+        	if(!alist.hasClass("actived")){
+        		mui.alert("请选择购买类型");
+        	}
+        	for(let i=0;i<alist.length;i++){
+        		// console.log(alist.eq(i).attr("class"))
+        		if(alist.eq(i).attr("class")=="actived"){
+        			var id = alist.eq(i).find("ul").attr("class");
+	        		console.log(id);
+	        		window.location.href= url+"/memberalipay/"+id;		        	
+	        	}else{
+	        		// alert("请选择购买类型");
+	        	}
+        	}
+        	
+        });
+        
+        $(".vip_weixin_buy").click(function(){
+
+        	var alist=$(".thirty a");
+        	if(!alist.hasClass("actived")){
+        		mui.alert("请选择购买类型");
+        	}
+			var id = '';
+        	for(let i=0;i<alist.length;i++){
+        		// console.log(alist.eq(i).attr("class"))
+        		if(alist.eq(i).attr("class")=="actived"){
+
+        			var vip_id = alist.eq(i).find("ul").attr("class");
+	        		//拆分得id
+					console.log(vip_id)
+	        		id = vip_id
+	        	}
+        	}
+
+        	$.ajax({
+        		url: url+'/memberweixin/'+id,
+        		success:function(res){
+        			// console.log('"'+res.appId+'"')
+        			WeixinJSBridge.invoke(
+				      	'getBrandWCPayRequest', {
+					         appId:res.appId,     //公众号名称，由商户传入     
+					         timeStamp:res.timeStamp,  //时间戳，自1970年以来的秒数     
+					         nonceStr:res.nonceStr, //随机串     
+					         package:res.package,    
+					         signType:res.signType,         //微信签名方式：     
+					         paySign:res.paySign //微信签名 
+				    	},function(res){
+						    if(res.err_msg == "get_brand_wcpay_request:ok" ){
+						    	window.location.href="/me/index";
+						      	// 使用以上方式判断前端返回,微信团队郑重提示：
+						        //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+						    }
+						    // alert(JSON.stringify(res)); 
+						  }
+				    ) 
+				   	
+        		},
+        		error:function(){
+        			mui.alert('服务器请求失败')
+        		}
+        	})
+        })
+    </script>
+</html>

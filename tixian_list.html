@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>提现明细</title>
+		<script src="web/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="web/css/mui.min.css"/>
+		<style type="text/css">
+			body{background: #f1f1f3;}
+			.box{display: flex;justify-content: space-around;align-items: center;color: #888888;font-size: 11px;height: 35px;line-height: 35px;background: #FFF;}
+			.box span{text-align: center;display: block;}
+			.box span:nth-of-type(1){width: 25%;}
+			.box span:nth-of-type(2){width: 43%;}
+			.box span:nth-of-type(3){width: 30%;}
+			.box span:nth-of-type(4){width: 20%;}
+			.title{margin-top:5px;border-bottom: 3px solid #ececec;font-size: 12px;color: #4a4a4a;}
+			.content{border-bottom: 1px solid #f5f5f5;}
+			.content:nth-last-child(1){margin-bottom: 35px;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">提现明细</h1>
+		</header>
+		<div class="mui-content">
+			<div class="box title">
+			  <span>交易类型</span>
+			  <span>申请时间</span>
+			  <span>申请金额</span>
+			  <span>申请状态</span>
+			</div>
+			<!-- <div class="box content">
+			  <span>代理</span>
+			  <span>addtime</span>
+			  <span>money</span>
+			  <span>待处理</span>
+			</div> -->
+
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(".mui-action-back").click(function(){
+			window.location.href = "/sands/mewallet.html"; //返回上个页面
+		});
+		var agentId = 1;
+		if(agentId == ""){
+			mui.alert('未登录')
+		}else{
+			showwithdraw(agentId);
+		};
+		function showwithdraw(agentId){ //提现明细
+			$.ajax({
+				url: url + '/api/me/showagentwithdraw' ,
+				dataType: 'json',
+				method: 'GET',
+				data: {
+					agentId: agentId
+				},
+				success: function(res){
+					console.log(res)
+					if(res.status == 0){
+						mui.alert(res.msg)
+					}else{
+						console.log("显示正常");
+						if(res.data.lenght == 0){
+							mui.alert('暂无提现明细');
+						}else{
+							var data = res.data;
+							var text = '';
+							for(var i=0;i<data.length;i++){
+								if (data[i].style == 0) {
+									data[i].style = "购买会员"
+								};
+								if (data[i].style == 1) {
+									data[i].style = "购买合伙人"
+								};
+								if (data[i].style == 2) {
+									data[i].style = "购买单条信息"
+								};
+								if (data[i].style == 3) {
+									data[i].style = "信息置顶"
+								};
+								if (data[i].style == 4) {
+								data[i].style = "购买本地发布"
+								};
+								if (data[i].type == 0) {
+								data[i].type = "待处理"
+								};
+								if (data[i].type == 1) {
+								data[i].type = "已同意"
+								};
+								if (data[i].type == 2) {
+								data[i].type = "已拒绝"
+								};
+								text += `<div class="box content">
+								  <span>${data[i].style}</span>
+								  <span>${data[i].addtime.split(' ')[0]}</span>
+								  <span>${data[i].money}</span>
+								  <span>${data[i].type}</span>
+								</div>`;
+							};
+							$('.mui-content').append(text)
+						}
+					}
+				},
+				error: function (err){
+					console.log(err)
+				}
+			});
+		};
+		
+
+		
+	
+	</script>
+</html>

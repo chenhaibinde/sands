@@ -1,0 +1,105 @@
+/*选项卡样式*/
+.mui-content{width: 100%;}
+.tab{margin-top:20px;}
+.tab>ul{display: flex; justify-content: space-between;}
+#tab1,#tab2{height: 100%;}
+
+.supply{width: 100%; display: flex; justify-content: space-around; align-items: center; }
+.supply .supply_img{width: 12%;}
+.supply .supply_img img{width:30px; height: 30px;border-radius:50%;}
+.supply .supply_info{width: 88%;}
+.supply .supply_info ul{margin:0px;}
+.supply .supply_info ul li{line-height: 16px; font-size: 12px;}
+.supply .supply_info ul .title{font-size: 13px;overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+.supply .supply_info ul .text{color: #888888; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+.supply .supply_info ul .address{color: #888888; display: flex; flex-wrap: wrap;}
+.supply .supply_info ul .address .addr{width: 73%; display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.supply .supply_info ul .address .time{color: #888888;}
+/*地区样式*/
+#tab1_eara .zimu{width: 100%; font-size: 12px; padding: 0 10px; margin-bottom: 5px;}
+.city ul{width: 100%; display: flex; flex-wrap: wrap; padding: 0 10px;background:#FFF;}
+.city ul li{background: #F3F3F3;width: 22%;margin: 5px 1.5%; padding: 2px 0; text-align: center;overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+.collect_img{width: 18px; position: relative;top: -3px;}
+.nav-tabs>li.active>a:hover{border: none;}
+.nav .open>a{background:none;border:none;}
+/*我要评论弹框样式*/
+.modal-mask {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #000;
+  opacity: 0.5;
+  overflow: hidden;
+  z-index: 9000;
+  color: #fff;
+}
+.modal-dialog {
+  width: 90%;
+  overflow: hidden;
+  position: fixed;
+  top: 30%;
+  left: 0;
+  z-index: 9999;
+  background: #f9f9f9;
+  margin-left:5%;
+  border-radius: 10px;
+}
+.modal-dialog .modal-title {
+  padding: 20px 0px;
+  font-size: 18px;
+  color: #030303;
+  text-align: center;
+}
+.modal-dialog .modal-content {
+  padding: 25px 16px;
+}
+.modal-dialog .modal-input {
+  display: flex;
+  background: #fff;
+  border: 2rpx solid #ddd;
+  border-radius: 2px;
+  font-size: 14px;
+}
+
+.modal-dialog .input {
+  width: 100%;
+  height: 41px;
+  font-size: 14px;
+  line-height: 14px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  color: #333;
+}
+.modal-dialog input[type=radio]{
+	width:20px;height:20px;
+}
+.modal-dialog input-holder {
+  color: #666;
+  font-size: 14px;
+}
+
+.modal-dialog .modal-footer {
+  margin-top: 10px;
+  display: flex;
+  align-items:center;
+  flex-direction: row;
+  height: 40px;
+  border-top: 1px solid #F3F3F3;
+  font-size: 16px;
+}
+.modal-dialog .btn-cancel {
+  width: 50%;
+  color: #666;
+  text-align: center;
+  border-right: 1px solid #F3F3F3;
+}
+.modal-dialog .btn-confirm {
+  width: 50%;
+  color: #007AFF;
+  text-align: center;
+}
+
+
+

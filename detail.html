@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>信息详情</title>
+		<link rel="stylesheet" type="text/css" href="web/css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="web/css/mui.min.css" />
+		<link rel="stylesheet" href="web/css/bootstrap.min.css">
+      	<link rel="stylesheet" type="text/css" href="web/css/preview.css"/>
+      	<link rel="stylesheet" type="text/css" href="web/css/supply_info.css" />
+		<script src="web/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="web/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="web/js/qrcode.js"></script>
+		<script src="web/js/mui.previewimage.js" type="text/javascript" charset="utf-8"></script>
+		<style>
+          .user_info{display:flex;align-items: center;padding-top:10px;width:100%;}
+          .user_info .head_img{width:14%;}
+          .user_info .head_img img{width:35px;height:35px;border-radius:50%;}
+          .user_info .user>div{line-height:18px;}
+          .user_info .user .user_name{color: #343434;}
+          .user_info .user .labels span{color: #117ff8;padding: 0px 3px;border: 1px solid #007AFF;margin-right:5px;font-size:8px;}
+          .user_info .user .labels .zhiding{background:#007AFF;color:#FFF;border:none;}
+          .user_address{font-size:10px;}
+          	a:active{color:#000;}
+			.mui-content{font-size: 14px; color: #222222;background: #FFFFFF;}
+			.mui-content ul{width: 100%;}
+			.mui-content>ul>li { display: flex;align-items: center; line-height: 30px; flex-wrap: wrap;border-bottom:1px solid #F3F3F3;padding: 0 10px;font-size: 12px;color: #6c6c6c;}
+			.mui-content ul li .fabu_time{display: block; width: 80px;}
+			.mui-content ul li .span{display: block; width: 60px;}
+			.mui-content ul li .jieshao{display: block; width: 100%;line-height: 30px;margin-top: 5px;}
+			.mui-content ul li>.btn{display: block; margin-left: 5%; width: 70px;padding: 0; text-align: center; line-height: 30px;color: #007AFF !important;}
+			.mui-content ul .img_info{width: 100%;}
+			.mui-content ul .img_info img{width:100%;}
+			.mui-content ul li .btn_tousu{background: #fea811;padding: 0px 10px; color: #ffead2 !important; line-height: 20px;border-radius: 20px;}			
+			
+			.pingjia_area>button{height: 25px; padding:0px 12px;line-height: 25px; background: #007AFF;border: none;color: #fff;width: 99%;border-radius: 10px;}
+			.modal{top: 22%;}
+			.modal-body{padding:10px 0 0 0; text-align: center; color: #222222;}
+			.modal-body .tousu{padding: 0 10px;}
+			.modal-body .tousu li{display: block;width: 100%; text-align: center;line-height: 30px;}
+			.modal-body .tousu li textarea{border: 0.5px solid #444444; line-height: 20px;}
+			.modal-footer {display: flex;  justify-content: space-around;}
+			.modal-footer .btn a{color: #fff !important;}
+			.add_color{font-size: 18px !important; background-image: url(/web/img/star_blue.jpg);background-position: center;background-size: cover;}
+			.head_icon img{width: 40px;height: 40px;}
+			.pinglun{width: 100%;display: flex; justify-content: center;}
+			.pinglun>div>ul>li{line-height: 25px;}
+			.pinglun .head_icon{width: 20%;text-align: center;}
+			.pinglun .head_icon .name{font-size: 12px;color: #9D9D9D;}
+			.pinglun .txt{width: 80%; font-size: 12px; }
+			.pinglun .txt .tit{line-height: 20px;}
+			.pinglun .txt .tit textarea{padding: 5px;}
+			.pinglun .txt .info{color: #9D9D9D;margin-top: -10px;}
+			.tousu_actived{background: #FFF;color: #007AFF;}
+			#myModal{position: fixed;top: 0%; width: 98%;right: 1%;z-index: 100;}
+			#myModal .modal-body{display: flex;justify-content: space-around;}
+		   #myModal .modal-body>div{width: 50%; text-align: center;}
+		   #myModal .modal-body>div:nth-of-type(1){border-right: 1px solid #C4C4C4;}
+		   #myModal .buy{display: block;width: 90%;height: 35px; text-align: center; margin: 20px auto; border-radius: 20px; background: #007AFF;color: #fff; font-size: 16px;}
+          .footer{width:100%;position:fixed;bottom:0%;height:48px;background:#FFF;}
+          .footer,.footer .nav{display:flex;justify-content:space-between;font-size:12px;align-items:center;color: gray;} 
+          .footer>div{width:50%;text-align:center;}
+          .footer .nav>div{width:33%;}
+          .footer .eval{background: #007AFF;color: #f7f9ff;line-height: 35px;font-size: 15px;border-radius: 18px;width:40% !important;margin-right:5%;}
+          .footer img{width:22px;height:22px;}
+          .home_font{color: gray;}
+          .go_fabu{position: fixed;bottom: 25%;right: 9px;font-size: 12px;color: #FFF;background: #000;width: 32px;height: 32px;line-height: 32px;border-radius: 50%;display: flex;align-items: center;justify-content: center;
+					background: rgba(0,0,0,0.6)}
+
+		  .go_fabu img{width: 15px;height: 15px;}
+          .share_model{position:fixed;height:100%;width:100%;background: rgba(0,0,0,0.5);left:0%;top:0%;display:flex;justify-content:center;align-items:center;}
+			.share_model .contents{width:90%;background:#FFF;text-align: center;padding: 10% 0;}
+			.share_model .contents img{width: 120px; height: 120px;margin-bottom:10px;margin: auto;}
+			.link_address,.copy{
+				font-size: 14px;line-height: 25px;width: 100%;
+			}
+			.title{margin-bottom: 20px;font-size: 14px;}
+			#location_url{overflow: auto;}
+			.copy{text-align: center;}
+			.copy button{width: 50%;background: #007AFF;border: none;color: #FFF;line-height: 20px;border-radius: 20px;}
+          	 /*单次购买*/
+          	.purchase{position:fixed;height:100%;width:100%;background: rgba(0,0,0,0.6);left:0%;top:0%;display:flex;justify-content:center;align-items:center;}
+			.purchase>div{height: 140px;background: #FFF;width: 80%;line-height: 100px;padding: 15px 10px;border-radius: 5px;}
+          	.purchase input[type=radio]:before{
+				font-size: 20px !important;
+			}
+			.purchase>div>div{height: 35px;display: flex;line-height: 35px;}
+			.purchase .btn-cancel{display: flex;justify-content: space-around;padding: 10px 0;}
+			.purchase .btn-cancel div{width: 60px;border: 1px solid #E3E3E3;height: 25px;line-height: 25px;text-align: center;}
+         	.purchase .btn-cancel .confirm_vip{border-color:#007AFF;background:#007AFF;color:#FFF;}
+			.mui-popup-button.mui-popup-button-bold{font-weight: 500;}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="javascript:history.back(-1);"></a>
+			<h1 class="mui-title">信息详情</h1>
+		</header>
+		<div class="mui-content">
+			<ul class="">
+				<!-- 用户信息 -->
+              	<li class="persional_info" style="display: none;">					
+					<div class="user_info">
+						<div class="head_img"><img /></div>
+						<div class="user">
+							<div class="user_name"></div>
+							<div class="labels"><span class="zhiding"></span></div>
+						</div>
+					</div>
+					<div class="user_address"></div>
+				</li>
+				<!-- 信息内容 -->
+				<li class=""><span class="text jieshao"></span></li>
+                <div class="img_info"><img /></div>									
+				<li class="" style="border-bottom: 2px solid #f1f1f2;">					
+					<span class="fabu_time"></span> 浏览量:<span class="click" style="color:#007AFF;margin-left:2px;"></span>条								
+				</li>
+				<li class="">					
+					<span class="span">联系人:</span>
+					<span id="linkman_info" class="text"></span>
+				</li>
+				<li class="">					
+					<span class="span">联系电话:</span>
+				    <span id="phone_info" class="text" style="display: block;width:135px;"></span>
+					<a class="btn" href="" data-toggle="modal" data-target="#chakan" id="showinfo" style="font-size: 13px;">点击查看></a>
+					<!--点击查看弹出框内容-->
+					<div class="modal" id="" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content" style="padding:10px 15px;">
+								<div class="modal-body" style="padding: 0;">
+									<h5>成为VIP用户，可享受免费查看服务</h5>
+								</div>
+								<div class="modal-footer" style="border:none;">
+									<button type="button" class="btn btn-default" data-dismiss="modal">暂不考虑</button>					
+									<button type="button" class="btn btn-primary" style="background:#007AFF;border-color:#007AFF;"><a href="">成为VIP会员</a></button>	
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="info_address" style="display: none;align-items: baseline;flex-wrap: nowrap;">
+					<span class="span" style="width: 20%;">详细地址:</span>
+					<span class="text" id="address_info" style="width: 80%;"></span>		
+				</li>
+				<li class="">					
+					<span class="span">共发信息:</span> <span class="text count"></span>条		
+				</li>
+				
+				<div class="purchase" style="display:none;">
+					<div class="buy_vip">
+						<div class="mui-input-row mui-radio">
+							<label><input name="vip" type="radio" checked value="1"><span>成为会员</span></label>                               					
+						</div>
+						<div class="mui-input-row mui-radio">
+							<label><input name="vip" type="radio" value="2"><span>单次购买</span></label>					
+						</div>
+						<div class="btn-cancel">
+							<div class="close_vip">取消</div>
+							<div class="confirm_vip">确定</div>						
+						</div>
+					</div>
+				</div>				
+				<!-- 支付选择 -->
+				<div class="hides" style="display: none;" id="myModal" aria-hidden="true">
+	      			<div class="modal-content" style="position: fixed;width:100%;bottom:0%;left:0%;border:none;"> 
+	       				<div class="modal-header" style="color: #000;padding:10px;">请选择支付方式</div>
+	       				<div class="modal-body" style="padding:10px;">
+	        				<div>
+		         				<a href="/bynumweixin/1/{{ $supply->id }}" style="display:block;">
+		          					<div><img class="img1 one_weixin_buy" style="width: 60px; height: 50px;"/></div>
+		          					<div>微信</div>
+		         				</a>
+	        				</div>
+	        				<div>
+	         					<a href="/bynumalipay/1/{{ $supply->id }}" style="display:block;">
+		          					<div><img class="img2 one_alipay_buy" style="width: 50px; height: 50px;"/></div>
+		          					<div>支付宝</div>
+	         					</a>
+	        				</div>         
+	       				</div>
+		       			<div class="modal-footer">
+		        			<button type="button" id="out" class="buy btn btn-default">关闭</button>
+		        		</div>
+	        		</div>
+	        	</div>
+				<li class="" style="border-bottom:none;justify-content: space-between;margin-bottom:60px;">					
+					如遇虚假、违规等信息,请点此处投诉! 
+					<a class="btn_tousu" href="#" data-toggle="modal" data-target="#tousu">立即投诉</a>
+				</li>	
+				<!--立即投诉弹出框内容-->
+				<div class="modal fade" id="tousu" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content" style="padding: 10px 16px;">
+							<div class="modal-header" style="padding:0px;border:none;">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									&times;
+								</button>
+								<h4 class="modal-title" id="myModalLabel" style="text-align: center;color: #222222;padding:0px;">
+									投诉原因
+								</h4>
+							</div>
+							<div class="modal-body">
+								<ul class="tousu">
+									<li>已联系，无此货源</li>										
+									<li>电话号码为空号</li>
+									<li>其它原因</li>
+									<textarea name="complain_text" placeholder="(选填)您还可以详细的说明一下" style="padding: 0px 5px;height: 65px;"></textarea>
+								</ul>
+							</div>
+							<div class="modal-footer" style="border-top:none;margin-top:0px;">
+								<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+								</button>
+								<button type="button" class="btn btn-primary" style="background-color:#007AFF;border-color:#007AFF;">
+									<a href="#" id="complain_sub">提交</a>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</ul>
+			<!-- 底部导航 -->
+            <div class="footer">
+              <div class="nav">
+              	<div>
+					<a href="javascript:void(0)" onclick="go_home()">
+						<div class="icon"><img class="tabBar_icon1"></div>
+						<div class="home_font">首页</div>
+					</a>
+                </div>
+                <div id="share_btn">
+                  <a href="#">
+                    <div class="icon"><img class="share_icon"></div>
+                    <div class="home_font">转发</div>
+                  </a>
+                </div>
+                <div>
+                    <a id="btn_shoucang" href="#">
+						<div class="icon"><img class="collect_img recollect_icon"></div>
+						<div class="home_font" id="collect_state">未收藏</div>
+                  	<!-- @if ($supply->user_collect == "未收藏")
+						<div class="icon"><img class="collect_img recollect_icon"></div>
+                    	<div class="home_font" id="collect_state">未收藏</div>
+                    @else
+                    	<div class="icon"><img class="collect_img collect_icon"></div>
+                    	<div class="home_font" id="collect_state">已收藏</div>
+                    @endif -->
+                    </a> 
+                </div>
+              </div>
+              <div class="eval" id="eval"><a href="#" style="color:#FFF !important;">我要评价</a></div>         
+            </div>
+          	<!-- 搜索 -->
+            <div class="go_fabu go_search">
+				<a href="javascript:void(0);">
+				    <img class="search_icon">
+				</a>          	
+          	</div>
+			<!-- 发布 -->
+          	<div class="go_fabu go_issue" style="width:31px;height:31px;bottom:16%;">  
+            	<a href="javascript:void(0);">
+					<img class="issue_icon">
+				</a>
+			</div>
+          <div class="modal-mask" id="eval_show1" style="display:none;"></div>
+          <div class="modal-dialog" id="eval_show2" style="display:none;">            
+              <div class="modal-title">我要评论</div>
+              <div style="padding:0 10px;">      
+                  <textarea  name="comment_text" rows="" cols="" style="height:50px;width:100%;border:1px solid #F3F3F3;margin:auto;font-size:12px;padding:5px;box-sizing:border-box;"></textarea>
+                  <div style="line-height: 35px;width: 100%;">
+                    <input style="margin: -3px 0 0 5%;" type="radio" name="good" id="0" value="好评" /> 好评&nbsp;&nbsp;
+                    <input style="margin: -3px 0 0 10%;" type="radio" name="good" id="1" value="中评" /> 中评&nbsp;&nbsp;
+                    <input style="margin: -3px 0 0 10%;" type="radio" name="good" id="2" value="差评" /> 差评
+                 </div>
+              </div>
+              <div class="modal-footer" style="background:#007AFF;">
+                <div class="btn-cancel">
+                   <button id="eval_hidden" style="font-size:16px;color:#FFF;background:#007AFF;border:none;">取消</button>      
+                </div>
+                <div class="btn-confirm">
+                  <button id="comment" style="font-size:16px; color:#FFF;background:#007AFF;border:none;">提交</button>
+                </div>
+              </div>
+            	
+          </div>
+          <!--转发弹框-->
+          <div class="share_model" style="display:none;">
+			<div class="contents">
+				<div class="title">点击二维码长按保存</div>
+				<div id="qrcode_img"></div>
+				<div class="link_address">或复制以下链接可分享好友</div>
+				<div class="link_address" id="location_url"></div>
+				<input id="input" style="height: 0;border: none;opacity: 0;"/>
+				<div class="copy"><button type="button" class="mui-btn mui-btn-blue" onclick="copyText()">复 制</button></div>				
+			</div>
+		</div>
+          
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(function(){
+			$(".one_weixin_buy").attr("src",url+"/web/img/weixin_icon.jpg");
+			$(".one_alipay_buy").attr("src",url+"/web/img/zhifubao_icon.jpg");
+			$(".tabBar_icon1").attr("src",url+"/web/img/tabBar1.png");
+			$(".share_icon").attr("src",url+"/web/img/share_icon.png");
+			$(".recollect_icon").attr("src",url+"/web/img/re_collect.png");
+			$(".collect_icon").attr("src",url+"/web/img/collect.png");
+			$(".share_icon").attr("src",url+"/web/img/share_icon.png");
+			$(".issue_icon").attr("src",url+"/web/img/quick_fabu.png");
+			$(".search_icon").attr("src",url+"/web/img/quick_search.png");
+		});
+		var href = window.location.href.split("&");
+		var id = href[2].split("=")[1]; //信息id
+		var is_special = href[0].split("=")[1]; //是否商砼
+		var info_type = href[1].split("=")[1]; //砂石或商砼等类目id
+		// console.log(id)
+		info(id);
+		info_num(id);
+		function info(e) { //基本信息
+			$.ajax({
+				url: url + "/api/detail/index",
+				dataType: 'json',
+				data: {
+					id: e,
+					is_special: is_special
+				},		
+				success: function(res) {
+					console.log(res);
+					var data = res.data;
+					var is_stick = data.is_stick; // 0=普通信息 1=置顶信息
+					var identify = data.type; // 0=会员 1=普通用户
+					$("#phone_info").text(data.phone);
+					$(".click").text(data.click);
+					if(is_special == 1) { //商砼信息	
+						$(".persional_info").css("display","block");
+						$(".user_name").text(data.slinkman);
+						$("#linkman_info").text(data.slinkman);						
+						$(".user_address").text(data.saddress);
+						$(".jieshao").text(data.sdesc.replace(/\d{7,}/g, '*'));						
+						$(".img_info>img").attr("src",data.spic);
+						if(data.mpic.indexOf("http") > -1){
+							$(".head_img>img").attr("src",data.mpic);							
+						}else{
+							$(".head_img>img").attr("src",url+'/'+data.mpic);
+						};
+						$(".fabu_time").text(data.saddtime.split(" ")[0]);
+						var slabel = data.slabel;
+						if(is_stick == 1){
+							$(".zhiding").text("置顶");
+							if(slabel == null){
+								$(".labels").html("<span>商砼</span>")
+							}else{
+								var label =  slabel.split(",");
+								var text = '';
+								for(var i=0;i<label.length;i++){
+									text += `<span>${label[i]}</span>`;
+								};
+								$(".labels").html(text);
+							};
+						}else{
+							if(slabel == null){
+								$(".zhiding").text("商砼")
+							}else{
+								$(".zhiding").css("display","none");
+								var label =  slabel.split(",");
+								var text = '';
+								for(var i=0;i<label.length;i++){
+									text += `<span>${label[i]}</span>`;
+								};
+								$(".labels").html(text);
+							};
+						}
+					}else{ //沙石信息
+						$(".info_address").css("display","flex");
+						$("#address_info").text(data.address);					
+						$(".img_info>img").attr("src",data.pic);
+						$("#linkman_info").text(data.linkman);	
+						$(".jieshao").text(data.desc.replace(/\d{7,}/g, '*'));					
+						$(".fabu_time").text(data.addtime.split(" ")[0]);
+					};													
+				}
+				
+			});
+		};
+		// 获取电话号码
+		function get_phone(id){
+			$.ajax({
+				url: url + "/api/supplydetail/" + id,
+				dataType: 'json',
+				success: function(res) {
+					console.log(res);
+					if(res.status == 0){
+						mui.alert(res.msg);
+					}else{
+						mui.alert("成功拨打电话")
+					}
+					
+				}
+			})
+		};
+		function info_num(e) { //共发信息
+			$.ajax({
+				url: url + "/api/detail/getuserall",
+				dataType: 'json',
+				data: {
+					id: e
+				},		
+				success: function(res) {
+					// console.log(res);
+					var data = res.data;
+					$(".count").text(data);			
+				}
+				
+			})
+		};
+		
+		
+		//点击投诉
+        $('.tousu li').click(function () {
+            var f = this;
+            $('.tousu li').each(function () {  this.className = this == f ? 'tousu_actived':'noactive'});
+        });	
+        // 转发的二维码图片设置
+        window.onload =function(){
+			var a_link = url + "/api/detail/index?id="+ id;
+			// alert(a_link)
+			var qrcode = new QRCode(document.getElementById("qrcode_img"), {
+	            width : 96,//设置宽高
+	            height : 96,
+	        });
+	        qrcode.makeCode(a_link);
+	     	//长按保存图片
+          	$("#qrcode_img img").attr({"data-preview-src":"","data-preview-group":"1"})
+		}
+		//跳转首页
+		function go_home(){
+			window.location.href = "/sands/index.html";
+		};
+		// 跳转搜索
+		$(".go_search").click(function(){
+			go_search();
+		});
+		// 跳转发布
+		$(".go_issue").click(function(){
+			go_issue(info_type);
+		});
+		function go_search(){ //搜索
+			window.location.href = "/sands/search.html";
+		};
+		function go_issue(info_type){ //发布
+			window.location.href = "/sands/issue.html?is_special="+is_special+"&id="+info_type;
+		};
+		//转发 复制链接
+        $("#share_btn").click(function(){
+			$(".share_model").css("display","flex");
+		});
+		$(".share_model").click(function(){
+			$(".share_model").css("display","none");
+		});
+		$(function(){
+			var location_url = window.location.href;
+			$("#location_url").text(location_url);			
+		});
+		function copyText() {
+		  var text = document.getElementById("location_url").innerText;
+		  var input = document.getElementById("input");
+		  input.value = text; // 修改文本框的内容
+		  input.select(); // 选中文本
+		  document.execCommand("copy"); // 执行浏览器复制命令
+		  mui.alert("复制成功");
+		};
+
+		//点击收藏	
+		$(function(){
+			$("#btn_shoucang").click(function(){
+				//判断是收藏还是取消收藏
+				var collect_state = $("#collect_state").text();
+				 console.log(collect_state);
+				if(collect_state == "未收藏"){
+					$.ajax({
+						url: url + "/api/detail/gocollect",
+						type: 'post',
+						data: id,
+						success: function(data){
+							if(data.msg == '请登录'){
+			            		mui.confirm('','请先登录',['暂不登录','前去登录'],function (e) {
+			            			if(e.index == 0){
+			            				console.log("取消登录")
+			            			}else{
+			            				window.location.href = "/sands/loginchoose.html"
+			            			}
+			            		});
+			            	}else{
+								console.log(data)
+			            	}
+							if(data == "收藏成功"){
+								$("#collect_state").text("已收藏");
+								$(".collect_img").prop("src", url+"/web/img/collect.png");
+							}
+						},
+						error: function(){
+							mui.alert('服务器请求失败');
+						}
+					});
+				}else if(collect_state == "已收藏"){
+					$.ajax({
+						url: url + "/api/detail/downcollect",
+						type: 'post',
+						data: id,
+						success: function(data){
+							if(data.msg == '你还未登录'){
+			            		mui.confirm('','请先登录',['暂不登录','前去登录'],function (e) {
+			            			if(e.index == 0){
+			            				console.log("取消登录")
+			            			}else{
+			            				window.location.href = "/sands/loginchoose.html"
+			            			}
+			            		});
+			            	}else{
+								console.log(data)
+			            	}
+							if(data == "取消收藏成功"){
+								$("#collect_state").text("未收藏");
+								$(".collect_img").prop("src", url+"/web/img/re_collect.png");
+							}
+						},
+						error: function(){
+							mui.alert('服务器请求失败');
+						}
+					});
+				}else{
+					mui.alert('无效的操作');
+				}
+
+				// if($('.star').hasClass('add_color')){
+				// 	$('.star').removeClass('add_color')
+				// 	$(".modal-body h5").text('取消收藏')
+					
+				// }else{
+				// 	$('.star').addClass('add_color')
+				// 	$(".modal-body h5").text("收藏成功")
+				// }
+			});
+			//点击评价
+          	$("#eval").click(function(){
+              $("#eval_show1").css("display","block");
+              $("#eval_show2").css("display","block");
+            });
+          	$("#eval_hidden").click(function(){
+              $("#eval_show1").css("display","none");
+              $("#eval_show2").css("display","none");
+            });
+			$("#comment").click(function(){
+				//获取评论的内容
+				var comment_text = $("textarea[name='comment_text']").val();
+				//获取评论的状态
+				var comment_goods = $("input[name='good']:checked").val();
+				// alert(comment_text);
+				// alert(comment_goods);
+				if(!comment_text){
+					mui.alert("请填写评价内容");
+				}else if (!comment_goods) {
+					mui.alert("请选择评价类型");
+				}else{
+					$.ajax({
+						url: url + "/api/detail/evaluates",
+						type: 'post',
+						data: {
+							sid: id,
+							evaluatesnmain: comment_goods,
+							text: comment_text
+						},
+						success: function(data){
+							console.log(data)
+							if(data.msg == '请登录'){
+								mui.confirm('','请先登录',['暂不登录','前去登录'],function (e) {
+									if(e.index == 0){
+										console.log("取消登录")
+									}else{
+										window.location.href = "/sands/loginchoose.html"
+									}
+								});
+			            	}else if(data.msg == '不是会员或者会员已经到期'){
+								$("#eval_show1").css("display","none");
+								$("#eval_show2").css("display","none");
+			            		$("#showinfo").next("div").find("h5").text(data.data)
+			            		$("#showinfo").next("div").find(".btn-primary a").text('成为会员')
+			            		$("#showinfo").next("div").find(".btn-primary a").prop('href','/me/vip');
+			            		$("#showinfo").next("div").modal("show");
+			            	}else{
+			            		$("#eval_show1").css("display","none");
+              					$("#eval_show2").css("display","none");
+			            		mui.alert(data);
+
+			            	}
+						},
+						error: function(){
+							mui.alert('服务器请求失败');
+						}
+					});
+				}
+			})
+			//点击投诉
+			$("#complain_sub").click(function(){
+				//获取评论的内容
+				var complain_text = $("textarea[name='complain_text']").val();
+				//获取评论的状态
+				var complain_goods = $(".tousu li[class='tousu_actived']").text();
+				// alert(complain_text);
+				// alert(complain_goods);exit();
+				if(!complain_goods){
+					mui.alert("请选择投诉原因");
+				}else{
+					$.ajax({
+						url: url + "/api/detail/complain",
+						type: 'post',
+						data: {
+							sid: id,
+							complainmain: complain_goods,
+							text: complain_text
+						},
+						success: function(data){
+							if(data.msg == '请登录'){
+								mui.confirm('','请先登录',['暂不登录','前去登录'],function (e) {
+									if(e.index == 0){
+										console.log("取消登录")
+									}else{
+										window.location.href = "/sands/loginchoose.html"
+									}
+								});
+			            	}else{
+			            		mui.alert(data)	
+			            	}
+							// alert(data)
+							$("#tousu").modal("hide");
+						},
+						error: function(){
+							mui.alert('服务器请求失败');
+						}
+					});
+				}
+			});
+			//点击联系方式
+			$("#showinfo").click(function(){
+				$.ajax({
+					url: url + "/api/supplydetail/"+ id,
+					type: 'GET',
+					success: function(data){
+                        console.log(data)
+						if(data.status == 1){
+							$("#phone_info").text(data.data.phone);
+			            }else{
+			            	if(data.msg == '请登录'){
+								mui.confirm('','请先登录',['暂不登录','前去登录'],function (e) {
+									if(e.index == 0){
+										console.log("取消登录")
+									}else{
+										window.location.href = "/sands/loginchoose.html"
+									}
+								});
+			            	}else if(data.msg == '请求次数不够' || data.msg == '不是会员或者会员已经到期'){
+								
+                              	$(".purchase").css("display","flex");
+                              	$(".purchase .buy_vip div:nth-of-type(2) label span").html(data.msg+'&nbsp;&nbsp;<b>'+data.res+'元/次</b>');
+                              	
+			            	}
+			            	// alert(data.data);
+			            }
+
+					},
+					error: function(){
+						mui.alert('服务器请求失败');
+					}
+				});
+			});
+			
+			
+          	$(".confirm_vip").click(function(){
+                var value = $(".buy_vip .mui-radio input[type='radio']:checked").val();
+                console.log(value)
+                if(value == 1){
+                    //alert("成为会员");
+                  	$(".purchase").css("display","none");
+                    window.location.href = url + "/api/me/vip"
+                   
+                };
+                if(value == 2){
+                    //alert("单次购买");
+                     $(".purchase").css("display","none");
+                  	//$("#showinfo").next("div").modal("show");
+                  	//buynum();
+                  	$("#showinfo").next("div").modal("hide"); //支付选择显示
+					$("#myModal").fadeIn();
+                };
+
+            });
+          	$(".close_vip").click(function(){ //关闭购买弹窗
+                $(".purchase").css("display","none");
+            });
+          
+          	$(".one_weixin_buy").click(function(){
+            	//alert("微信支付")
+              	$("#myModal").fadeOut();
+              	window.location.href = url+"/api/bynumweixin/1/"+id;
+            })
+          	$(".one_alipay_buy").click(function(){
+              	$("#myModal").fadeOut();
+            	//alert("支付宝支付")
+              	window.location.href = url+"/api/bynumalipay/1/"+id;
+            })
+			//去购买点击事件
+			$(".btn-primary").delegate(".oneprice_buy","click",function(){
+				var ua = window.navigator.userAgent.toLowerCase(); 
+			   	if (ua.match(/MicroMessenger/i) == 'micromessenger') { 
+			       	$.ajax({
+		        		url: url + '/api/bynumweixin/1/'+id,
+		        		success:function(res){
+		        			// console.log('"'+res.appId+'"')
+		        			WeixinJSBridge.invoke(
+						      	'getBrandWCPayRequest', {
+							         appId:res.appId,     //公众号名称，由商户传入     
+							         timeStamp:res.timeStamp,  //时间戳，自1970年以来的秒数     
+							         nonceStr:res.nonceStr, //随机串     
+							         package:res.package,    
+							         signType:res.signType,  //微信签名方式：     
+							         paySign:res.paySign //微信签名 
+						    	},function(res){
+								    if(res.err_msg == "get_brand_wcpay_request:ok" ){
+								      	// 使用以上方式判断前端返回,微信团队郑重提示：
+								        //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+								    }
+								    // alert(JSON.stringify(res)); 
+								  }
+						    ) 
+						   	
+		        		},
+		        		error:function(){
+		        			mui.alert('服务器请求失败')
+		        		}
+        			})
+			   	}else{
+					$("#showinfo").next("div").modal("hide");
+					$("#myModal").fadeIn();
+			   	}
+			})
+			$("#out").click(function(res){
+				$("#myModal").fadeOut();
+			})
+		})
+      	$(function(){
+        	function browserRedirect() { //判断登录设备
+              var sUserAgent = navigator.userAgent.toLowerCase();
+              var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+              var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+              var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+              var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+              var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+              var bIsAndroid = sUserAgent.match(/android/i) == "android";
+              var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+              var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+              if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {
+                //alert("手机登录");
+              } else {
+                //alert("电脑登录");
+              }
+            }
+          browserRedirect();
+        })
+      
+      
+      
+		// 保存图片     	
+		mui.init({
+		    gestureConfig: {
+		        longtap: true
+		    }
+		});
+		
+		mui.previewImage();
+		
+		mui.plusReady(function() {
+		    document.addEventListener('longtap', function(e) {
+		        var target = e.target;
+		        savePic(target);
+		    });
+		});
+		/**
+		 * 长按保存图片
+		 * 1. 获取图片链接
+		 * 2. 创建下载并下载图片
+		 * 3. 保存至相册
+		 */
+		function savePic(target) {
+		    if(target.tagName == 'IMG' && target.currentSrc.length > 0 && target.classList.contains('mui-zoom')) { //确保图片链接不为空
+		        var imgUrl = target.src;
+		        console.log('图片地址：' + imgUrl);
+		        var suffix = cutImageSuffix(imgUrl);
+		        mui.confirm("是否保存此图片", "", ["保存", "取消"], function(event) {
+		            var index = event.index;
+		            if(index == 0) {
+		                /**
+		                 * 创建下载任务
+		                 * http://www.html5plus.org/doc/zh_cn/downloader.html#plus.downloader.createDownload
+		                 */
+		                var downLoader = plus.downloader.createDownload(imgUrl, {
+		                    method: 'GET',
+		                    filename: '_downloads/image' + suffix
+		                }, function(download, status) {
+		                    var fileName = download.filename;
+		                    console.log('文件名:' + fileName);
+		                    console.log('下载状态：' + status);
+		                    /**
+		                     * 保存至本地相册
+		                     */
+		                    plus.gallery.save(fileName, function() {
+		                        /**
+		                         * 保存后，弹出对话框是否查看；
+		                         */
+		                        mui.confirm("打开相册查看", "", ["打开", "取消"], function(event) {
+		                            var gindex = event.index;
+		                            if(gindex == 0) {
+		                                /**
+		                                 * 选择图片
+		                                 */
+		                                plus.gallery.pick(function(file) {
+		                                    mui.toast("你选择了图片：" + file);
+		                                }, function(error) {
+		                                    console.log(JSON.stringify(error));
+		                                }, {
+		
+		                                });
+		                            }
+		                        });
+		                    });
+		                });
+		                /**
+		                 * 开始下载任务
+		                 */
+		                downLoader.start();
+		            }
+		        });
+		    }
+		}
+		// 截取图片后缀用于重命名图片，防止%E5%85%89%E6%98%8E%E8%A1%8C编码的文件不被系统相册识别；
+		function cutImageSuffix(imageUrl) {
+		    var index = imageUrl.lastIndexOf('.');
+		    return imageUrl.substring(index);
+		}	
+			
+	</script>
+
+</html>

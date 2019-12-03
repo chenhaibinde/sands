@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>列表信息</title>
+		<link rel="stylesheet" type="text/css" href="web/css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="web/css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="web/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="web/css/supply_info.css" />
+		<script src="//3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js"></script>
+		<script src="web/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="web/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+      	<script type="text/javascript" src="web/js/Popt.js"></script>
+		<script type="text/javascript" src="web/js/city.json.js"></script>
+		<script type="text/javascript" src="web/js/citySet.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				// 购买单次和会员选择
+				$(".confirm_vip").click(function(){
+					var value = $(".buy_vip .mui-radio input[type='radio']:checked").val();
+					console.log(value)
+					if(value == 1){
+						//alert("成为会员");
+						$(".purchase").css("display","none");
+						window.location.href = "/sands/vip.html";
+					};
+					if(value == 2){
+						//alert("单次购买");
+						$(".purchase").css("display","none");
+						//$("#showinfo").next("div").modal("show");
+						//buynum();
+						$("#showinfo").next("div").modal("hide"); //支付选择显示
+						$("#myModal").fadeIn();
+					};
+				});
+				$(".close_vip").click(function(){ //关闭购买弹窗
+					$(".purchase").css("display","none");
+				});
+
+				$(".one_weixin_buy").click(function(){
+					//alert("微信支付")
+					$("#myModal").fadeOut();
+					var id=$(this).attr('data-id');
+					window.location.href = "/bynumweixin/1/"+id;
+				})
+				$(".one_alipay_buy").click(function(){
+				  $("#myModal").fadeOut();
+				  var id=$(this).attr('data-id');
+				  //alert("支付宝支付")
+				  window.location.href = "/bynumalipay/1/"+id;
+				});
+				$("#out").click(function(res){
+					$("#myModal").fadeOut();
+				});
+			});
+        </script>
+		<style type="text/css">
+          	header a:hover{color:#FFF !important;}
+          	body,.mui-content{background:#f1f1f2;}
+          	.free{width:100%;padding:1px 10px;background:#FFF;}
+         	.dropdown-menus{position:fixed;top:28%;width:100%;display:flex;flex-wrap:wrap;background:#f1f1f2;z-index:3000;padding: 5px 0;}
+            .dropdown-menus li{display:block;width:30%;margin:5px 1.6%;line-height: 25px;background:#FFF;}
+         	.dropdown-menus li>a{display: block; width: 100%;text-align: center;overflow:hidden;white-space: nowrap;text-overflow: ellipsis;font-size:12px;}
+          		
+			.dropdown-menu{ left:-518% !important;min-width: 320px;z-index:2000;}		
+			.dropdown-menu li{float: left; margin:10px 0 0 15px; display: block; width: 60px;border:1px solid  #E3E3E3;}
+          	.dropdown-menu li>a{display: block; width: 60px;text-align: center;overflow:hidden;white-space: nowrap;text-overflow: ellipsis;font-size:12px important;padding: 0 !important; line-height: 22px !important;border-bottom:none !important;}
+          	.nav .open>a:hover{background: #fff;}
+			.dropdown-menu>.active>a{color: #fff !important;}
+			
+			#big_myTab{display: flex;width: 100%;}		
+			#big_myTab li{width: 50%;background: royalblue;}
+			.nav-tabs>li.active>a{border:none;border-bottom: 2px solid #007AFF !important;color: #007AFF !important;}	
+			.tab{margin-top: 0px;}
+			.nav-tabs{border-bottom: 1px solid #FFF;background:#FFF;}
+          	.nav-tabs>li>a{color:#7a7a7a !important;font-size:13px !important;}
+          	.nav>li>a{padding:4px 0;}
+         	 .supply{padding:5px;background:#FFF;}
+			.supply .supply_info ul .text{color: #989898;}
+			.supply .supply_info ul .address{color: #989898;}
+			.supply .supply_info ul .title{font-size: 14px;color: #000;}
+			header a:link{color: #FFFFFF !important;}
+          	#tab3{padding:0 10px;font-size:12px;}
+          	#tab3>a{display: block;background: #FFF;padding:5px;margin-top:5px;}
+          	.desc{color:#555555;font-size:13px;overflow: hidden; white-space: nowrap;text-overflow: ellipsis;background:#FFF;padding:0 5px;}
+          	.times{display:flex;justify-content:space-between;font-size:12px;color:#999;line-height:18px;background:#FFF;padding:0 5px;}
+          .times span:nth-of-type(2){margin-left:-20%;}
+            .title{display:flex;justify-content:space-between;}
+            .labels{font-size:10px !important;}
+            .labels .zhiding{background:#007AFF;color:#FFF !important;}
+            .labels span{border:1px solid #007AFF;color:#007AFF !important;line-height:20px;padding:1px 3px;}
+            .labels span:nth-of-type(2){margin:0 5px;}
+            .getphone{background:#e7f1fb;color: #71b2f9;border-radius:20px;padding:0px 8px;font-size: 10px;height:22px;line-height:22px;display: flex;align-items: center;}
+            .getphone img{width:13px;height:12px;}
+          	.getphone a{color: #71b2f9 !important;}
+            .city .choose_province{font-size: 12px;}
+
+            .go_fabu{position: fixed;bottom: 25%;right: 9px;font-size: 12px;z-index:3000;color: #FFF;background: #000;width: 32px;height: 32px;line-height: 32px;border-radius: 50%;display: flex;align-items: center;justify-content: center;background: rgba(0,0,0,0.6)}
+            .go_fabu img{width: 15px;height: 15px;}
+          	 /*单次购买*/
+          	.purchase{position:fixed;height:100%;width:100%;background: rgba(0,0,0,0.6);left:0%;top:0%;display:flex;justify-content:center;align-items:center;}
+			.purchase>div{height: 140px;background: #FFF;width: 80%;line-height: 100px;padding: 15px 10px;border-radius: 5px;}
+          	.purchase input[type=radio]:before{
+				font-size: 20px !important;
+			}
+			.purchase>div>div{height: 35px;display: flex;line-height: 35px;}
+			.purchase .btn-cancel{display: flex;justify-content: space-around;padding: 10px 0;}
+			.purchase .btn-cancel div{width: 60px;border: 1px solid #E3E3E3;height: 25px;line-height: 25px;text-align: center;}
+          	.purchase .btn-cancel .confirm_vip{border-color:#007AFF;background:#007AFF;color:#FFF;}
+          
+          	#myModal{position: fixed;top: 0%; width: 98%;right: 1%;z-index: 100;}
+			#myModal .modal-body{display: flex;justify-content: space-around;}
+		   #myModal .modal-body>div{width: 50%; text-align: center;}
+		   #myModal .modal-body>div:nth-of-type(1){border-right: 1px solid #C4C4C4;}
+		   #myModal .buy{display: block;width: 90%;height: 35px; text-align: center; margin: 20px auto; border-radius: 20px; background: #007AFF;color: #fff; font-size: 16px;}
+          .footer{width:100%;position:fixed;bottom:0%;height:48px;background:#FFF;}
+          .ope_pro_city>li{width:60px;text-align:center;}
+          /*地区插件样式*/
+          ._citys {
+            width: 100%;height: 100%;
+            display: inline-block;
+            position: relative;
+            background: #FFF;
+          }
+
+          ._citys span {
+            color: #A3A3A3;
+            height: 18px;
+            width: 18px;
+            line-height: 15px;
+            text-align: center;
+            border-radius: 50%;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            border: 1px solid #A3A3A3;
+            cursor: pointer;
+          }
+
+          ._citys0 {
+            width: 95%;
+            height: 34px;
+            line-height: 34px;
+            display: inline-block;
+            border-bottom: 1px solid #E3E3E3;
+            padding: 0px 5px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-left: 6px;
+          }
+
+          ._citys0 li {
+            display: inline-block;
+            line-height: 34px;
+            font-size: 15px;
+            color: #888;
+            width: 80px;
+            text-align: center;
+            cursor: pointer;
+          }
+
+          ._citys1 {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+
+            padding: 10px 0;
+          }
+
+          ._citys1 a {
+            width: 75px;
+            height: 35px;
+            display: inline-block;
+            background-color: #f5f5f5;
+            color: #666;
+            margin: 0 2px;
+            margin-top: 3px;
+            line-height: 35px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 12px;
+            border-radius: 5px;
+            overflow: hidden;
+          }
+
+          ._citys1 a:hover {
+            color: #fff;
+            background-color: #007AFF;
+          }
+          .AreaS {
+            background-color: #05920a !important;
+            color: #fff !important;
+          }
+          #PoPy{top: 0% !important;bottom: 0%;width: 100% !important;left: 0px !important;right:0px;padding-top: 50%;background: rgba(0,0,0,0.5) !important;position:fixed !important;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="/sands/index.html"></a>
+			<h1 class="mui-title">列表信息</h1>
+		</header>
+		<!-- 跳转按钮 -->
+		<div class="go_fabu go_search">
+            <a href="javascript:void(0);"><img class="search_icon"></a>
+        </div>
+        <div class="go_fabu go_issue" style="width:31px;height:31px;bottom:16%;">  
+          <a href="javascript:void(0);"><img class="issue_icon"></a>
+        </div>
+		
+		<div class="mui-content">
+			<div class="big_tab tab">
+			<!-- 免责声明 -->
+              <div class="free"></div>              
+				<div id="big_myTabContent" class="tab-content">
+					<!--求购选项卡 #tab1-->
+					<div class="tab tab-pane fade in active" id="tab1">
+						<ul id="myTab" class="nav nav-tabs" style="margin-top: 5px;">					
+                            <li class="list_All" style="display: none;">
+                              <a href="#" data-toggle="tab">全部</a>
+                          	</li>
+							<li class="dropdown list_Type" id="dropdowns" style="display: none;">
+								<a href="#" data-toggle="tab">分类</a>
+							</li>						                          
+							<li class="active list_Eare" style="width:25%;text-align:center;" id="city">
+                              <a href="javascript:void(0);" id="" style="white-space: nowrap; text-overflow:ellipsis;width:100%;overflow: hidden;color:#007AFF;">地区</a>
+                            </li>
+						</ul>
+						<!-- 分类弹框 -->
+						<ul class="dropdown-menus" id="dropdown-menus" style="display:none;"></ul>
+
+						<div id="myTabContent2" class="tab-content">						
+							<!--列表内容-->
+							<div class="tab-pane fade in active" id="tab3"></div>
+						</div>
+					</div>
+					<!-- #tab1结束-->									
+				</div>
+			</div>
+			<!--tab-->
+         
+          	<div class="purchase" style="display:none">
+                <div class="buy_vip">
+                  <div class="mui-input-row mui-radio">
+                    <label><input name="vip" type="radio" checked="checked" value="1" /><span>成为会员</span></label>                               					
+                  </div>
+                  <div class="mui-input-row mui-radio">
+                    <label><input name="vip" type="radio" value="2" /><span>单次购买</span></label>					
+                  </div>
+                  <div class="btn-cancel">
+                    <div class="close_vip">取消</div>
+                    <div class="confirm_vip">确定</div>						
+                  </div>
+                </div>
+
+            </div>
+          	<div class="hides" style="display: none;" id="myModal" aria-hidden="true">
+              <div class="modal-content" style="position: fixed;width:100%;bottom:0%;left:0%;border:none;"> 
+                <div class="modal-header" style="color: #000;padding:10px;">请选择支付方式</div>
+                <div class="modal-body" style="padding:10px;">
+                  <div>
+                    <a href="javascript:;" style="display:block;">
+                      <div><img class="img1 one_weixin_buy" style="width: 60px; height: 50px;"/></div>
+                      <div>微信</div>
+                    </a>
+                  </div>
+                  <div>
+                    <a href="javascript:;" style="display:block;">
+                      <div><img class="img2 one_alipay_buy" style="width: 50px; height: 50px;"/></div>
+                      <div>支付宝</div>
+                    </a>
+                  </div>         
+                </div>
+                <div class="modal-footer">
+                  <button type="button" id="out" class="buy btn btn-default">关闭</button>
+                </div>
+              </div>
+          </div>
+			
+		</div>
+	</body>
+    <div id="allmap"></div>
+	<script type="text/javascript">
+	  	$("#city").click(function(e) { //地区选择
+	        SelCity(this, e);
+	    });
+	  	$("#dropdowns").click(function(){  
+	      $("#dropdown-menus").css("display","flex")
+	      $("#tab3").css("display","none")
+	      $("#tab4").css("display","none")
+	    });
+	  	$("#dropdown-menus").click(function(){  
+	      $("#dropdown-menus").css("display","none")
+	    });
+		$(function(){
+			$("#tab4").hide()
+			$("#pro_show").click(function(){
+	          	$("#dropdown-menus").css("display","none");
+				$("#tab3").css("display","none");
+				$("#tab4").toggle();
+			})
+		})
+	</script>
+	<script type="text/javascript" charset="utf-8">
+		$(function(){
+			$(".one_weixin_buy").attr("src",url+"/web/img/weixin_icon.jpg");
+			$(".one_alipay_buy").attr("src",url+"/web/img/zhifubao_icon.jpg");
+			$(".issue_icon").attr("src",url+"/web/img/quick_fabu.png");
+			$(".search_icon").attr("src",url+"/web/img/quick_search.png");
+		});
+		console.log(location.href)
+		var href = window.location.href.split("&");
+		var id = href[1].split("=")[1];	//十大分类id
+		var is_special = href[0].split("=")[1]; //is_special=1为商砼 null为其他
+		var lat1 = localStorage.getItem("lat");
+		var lng1 = localStorage.getItem("lng");
+		$(".go_search").click(function(){ //跳转搜索页
+			window.location.href = "/sands/search.html";
+		});
+		$(".go_issue").click(function(){ //跳转发布页
+			window.location.href = "/sands/issue.html?is_special="+is_special+"&id="+ id;
+		});
+		$(".list_All").click(function(){ //商砼全部事件
+			special('all');
+		});
+		// $(".buy_num").click(function(){ //拨打电话
+		// 	var id = $(".buy_num").attr("id");
+		// 	mui.alert('拨打电话')
+		// 	console.log(id);
+		// });
+		// 点击拨打电话
+		function buy_num(e){
+			console.log(e);
+			if(e){
+				get_phone(e);
+				var phone = 13811111111;
+				window.location.href = "tel://"+phone;
+			}else{
+				console.log("没有信息ID")
+			}
+		};
+		// 获取电话号码
+		function get_phone(id){
+			$.ajax({
+				url: url + "/api/supplydetail/" + id,
+				dataType: 'json',
+				success: function(res) {
+					console.log(res);
+					if(res.status == 0){
+						mui.alert(res.msg);
+					}else{
+						mui.alert("成功拨打电话")
+					}
+					
+				}
+			})
+		};
+		if(is_special == 1) {
+			$(".mui-title").text("商砼列表");
+			special();
+			$(".list_All").css("display","block");
+		}else{
+			$(".list_Type").css("display","block");
+			info_type();
+			listInfo("stid");
+		};
+		//设置
+		settings();
+		function settings(e) { 
+			$.ajax({
+				url: url + "/api/index/settings",
+				dataType: 'json',				
+				success: function(res) {
+					// console.log(res);
+					var data = res.data;
+					$(".free").html(data.disclaimer);
+					
+				}
+				
+			})
+		};
+		//信息分类
+		function info_type(e) {
+			$.ajax({
+				url: url + "/api/list/gettype",
+				data: {
+					id: id
+				},
+				dataType: 'json',				
+				success: function(res) {
+					// console.log(res);
+					var data = res.data.all_type;				
+					var list='';
+					for (var i=0;i<data.length;i++) {
+						list += `<li><a class="types" href="javascript:void(0)" id="${data[i].id}">${data[i].name}</a></li>`;
+					};
+					$("#dropdown-menus").html(list);
+					$(".types").click(function(){
+						var stid = $(this).context.id;
+						var name = $(this).context.innerText;
+						$("#dropdowns>a").text(name);
+						$("#city>a").text("地区");
+						listInfo(stid); //点击分类调用列表
+						// console.log(stid)
+						// console.log(name)					
+					});
+				}
+			});
+		};
+		
+		function special(all,province){ //商砼列表
+			var data = "";
+			if(all == 'all'){ //商砼全部
+				data = {all: all};				
+			}else{ //商砼地区
+				data = {province: province};				
+			};
+			$.ajax({
+				url: url + "/api/list/getsupply?type=1&id="+id,
+				dataType: 'json',	
+				data: data,
+				success: function(res) {
+					console.log(res);
+					var data = res.data;
+					if(data.province == null) {
+						$("#city>a").text("地区");
+					}else{
+						$("#city>a").text(data.province);
+					};
+					var stick_supply = data.stick_supply;
+					var supply = data.supply;
+					if(stick_supply.length == 0 && supply.length == 0){
+						mui.alert("暂无信息")
+						$("#tab3").empty();
+					};
+					if(stick_supply.length>0){
+						var list = '';
+						for (var i=0;i<stick_supply.length;i++) {
+							if(stick_supply[i].label == null) {
+								var lab = stick_supply[i].label;
+								lab = "<span>商砼</span>"
+							}else{
+								var label = stick_supply[i].label.split(",");
+								var lab = '';
+								for (var j=0;j<label.length;j++) {
+									lab += `<span>${label[j]}</span>`;
+								}
+							};
+							if(stick_supply[i].mpic != null){
+								if(stick_supply[i].mpic.indexOf('http') > -1){
+									var img = `${stick_supply[i].mpic}`;
+								}else{
+									var img = `${url}/${stick_supply[i].mpic}`;
+								};
+							};
+							list += `<a href="/sands/detail.html?is_special=${is_special}&type=${id}&id=${stick_supply[i].supply_id}">
+								<div class="supply">							
+									<div class="supply_img">
+										<img src="${url}/${stick_supply[i].mpic}"/>
+									</div>
+									<div class="supply_info">
+										<ul>
+											<li class="title">
+												<div>${stick_supply[i].mname}</div>
+												<div class="labels">
+												    <span class="zhiding">置顶</span>
+													${lab}
+												</div> 												  											  
+												<div class="getphone">
+													<img src="${url}/web/img/phone_call.png"/><span>
+														<a href="javascript:void(0);" onclick="buy_num(${stick_supply[i].supply_id})" id="${stick_supply[i].supply_id}" class="buy_num">拨打电话</a>
+													</span>
+												</div>
+											</li>          
+										</ul>
+									</div>							
+								</div>
+								<div class="desc">${stick_supply[i].desc? stick_supply[i].desc.replace(/\d{7,}/g, '*'):'此用户没有介绍信息'}</div>
+								<div class="times">
+								  <span>${stick_supply[i].saddtime.split(' ')[0]}</span>
+								  <span><span style="color:#007AFF;">${stick_supply[i].click}</span>人浏览</span>
+								 <span>离你<span class="distance">${distance(lat1,lng1,stick_supply[i].lat,stick_supply[i].lng)}km</span></span>
+								</div>                    
+							</a>`;							
+						};
+						$("#tab3").html(list);
+						if(province){
+							$("#tab3").css("display","block");
+						};
+						
+					}else{
+						// console.log("暂无置顶数据")
+					};
+					if(supply.length>0){
+						var list = '';
+						for (var i=0;i<supply.length;i++) {
+							
+							if(is_special == 1){
+								if(supply[i].label == null) {
+									var lab = supply[i].label;
+									lab = "<span>商砼</span>"
+								}else{
+									var label = supply[i].label.split(",");
+									var lab = '';
+									for (var j=0;j<label.length;j++) {
+										lab += `<span>${label[j]}</span>`;
+									}
+								};
+							}else{
+								var lab = "";
+							};
+							if(supply[i].mpic != null){
+								if(supply[i].mpic.indexOf('http') > -1){
+									var img = `${supply[i].mpic}`;
+								}else{
+									var img = `${url}/${supply[i].mpic}`;
+								};
+							};
+							list += `<a href="/sands/detail.html?is_special=${is_special}&type=${id}&id=${supply[i].supply_id}">
+								<div class="supply">							
+									<div class="supply_img">
+										<img src="${img}"/>
+									</div>
+									<div class="supply_info">
+										<ul>
+											<li class="title">
+												<div>${supply[i].mname}</div>
+												<div class="labels">
+												  ${lab}	
+												</div>
+												<div class="getphone">
+													<img src="${url}/web/img/phone_call.png"/><span>
+														<a href="javascript:void(0);" onclick="buy_num(${supply[i].supply_id})" id="${supply[i].supply_id}" class="buy_num">拨打电话</a>
+													</span>
+												</div>
+											</li>          
+										</ul>
+									</div>							
+								</div>
+								<div class="desc">${supply[i].desc? supply[i].desc.replace(/\d{7,}/g, '*'):'此用户没有介绍信息'}</div>
+								<div class="times">
+								  <span>${supply[i].saddtime.split(' ')[0]}</span>
+								  <span><span style="color:#007AFF;">${supply[i].click}</span>人浏览</span>
+								 <span>离你<span class="distance">${distance(lat1,lng1,supply[i].lat,supply[i].lng)}km</span></span>
+								</div>                    
+							</a>`;							
+						};
+						$("#tab3").html(list);
+						if(province){
+							$("#tab3").css("display","block");
+						};
+						// 
+					}else{
+						// console.log("暂无普通数据")
+					};
+					
+					
+				}
+				
+			});
+		};
+		//沙石列表
+		function listInfo(stid,province) {
+			var data ="";
+			if(stid == "stid"){ //沙石地区
+				data = {
+					province: province
+				}
+			}else{ //沙石分类筛选
+				data = {
+					all: 'all',
+					stid: stid,//十大分类id
+				}
+			};
+			$.ajax({
+				url: url + "/api/list/getsupply?type=1&id="+id,
+				dataType: 'json',	
+				data: data,
+				success: function(res) {
+					console.log(res);
+					var data = res.data;
+					if(data.province == null) {
+						$("#city>a").text("地区");
+					}else{
+						$("#city>a").text(data.province);
+					};
+					var stick_supply = data.stick_supply;
+					var supply = data.supply;
+					if(stick_supply.length == 0 && supply.length == 0){
+						mui.alert("暂无信息")
+						$("#tab3").empty();
+					};
+					if(stick_supply.length>0){
+						var list = '';
+						for (var i=0;i<stick_supply.length;i++) {
+							if(stick_supply[i].label == null) {
+								var lab = stick_supply[i].label;
+								lab = "";
+							}else{
+								var label = stick_supply[i].label.split(",");
+								var lab = '';
+								for (var j=0;j<label.length;j++) {
+									lab += `<span>${label[j]}</span>`;
+								}
+							};
+							if(stick_supply[i].mpic != null){
+								if(stick_supply[i].mpic.indexOf('http') > -1){
+									var img = `${stick_supply[i].mpic}`;
+								}else{
+									var img = `${url}/${stick_supply[i].mpic}`;
+								};
+							};
+							list += `<a href="/sands/detail.html?is_special=${is_special}&type=${id}&id=${stick_supply[i].supply_id}">
+								<div class="supply">							
+									<div class="supply_img">
+										<img src="${url}/${stick_supply[i].mpic}"/>
+									</div>
+									<div class="supply_info">
+										<ul>
+											<li class="title">
+												<div>${stick_supply[i].mname}</div>
+												<div class="labels">
+												    <span class="zhiding">置顶</span>
+													${lab}
+												</div> 												  											  
+												<div class="getphone">
+													<img src="${url}/web/img/phone_call.png"/><span>
+														<a href="javascript:void(0);" onclick="buy_num(${stick_supply[i].supply_id})" id="${stick_supply[i].supply_id}" class="buy_num">拨打电话</a>
+													</span>
+												</div>
+											</li>          
+										</ul>
+									</div>							
+								</div>
+								<div class="desc">${stick_supply[i].desc? stick_supply[i].desc.replace(/\d{7,}/g, '*'):'此用户没有介绍信息'}</div>
+								<div class="times">
+								  <span>${stick_supply[i].saddtime.split(' ')[0]}</span>
+								  <span><span style="color:#007AFF;">${stick_supply[i].click}</span>人浏览</span>
+								 <span>离你<span class="distance">${distance(lat1,lng1,stick_supply[i].lat,stick_supply[i].lng)}km</span></span>
+								</div>                    
+							</a>`;							
+						};
+						$("#tab3").html(list);
+						if(province){
+							$("#tab3").css("display","block");
+						};
+					
+					}else{
+						// console.log("暂无置顶数据")
+					};
+					if(supply.length>0){
+						var list = '';
+						for (var i=0;i<supply.length;i++) {
+							if(is_special == 1){
+								if(supply[i].label == null) {
+									var lab = supply[i].label;
+									lab = "";
+								}else{
+									var label = supply[i].label.split(",");
+									var lab = '';
+									for (var j=0;j<label.length;j++) {
+										lab += `<span>${label[j]}</span>`;
+									}
+								};
+							}else{
+								var lab = "";
+							};
+							if(supply[i].mpic != null){
+								if(supply[i].mpic.indexOf('http') > -1){
+									var img = `${supply[i].mpic}`;
+								}else{
+									var img = `${url}/${supply[i].mpic}`;
+								};
+							};
+							list += `<a href="/sands/detail.html?is_special=${is_special}&type=${id}&id=${supply[i].supply_id}">
+								<div class="supply">							
+									<div class="supply_img">
+										<img src="${img}"/>
+									</div>
+									<div class="supply_info">
+										<ul>
+											<li class="title">
+												<div>${supply[i].mname}</div>
+												<div class="labels">
+												  ${lab}	
+												</div>
+												<div class="getphone">
+													<img src="${url}/web/img/phone_call.png"/><span>
+														<a href="javascript:void(0);" onclick="buy_num(${supply[i].supply_id})" id="${supply[i].supply_id}" class="buy_num">拨打电话</a>
+													</span>
+												</div>
+											</li>          
+										</ul>
+									</div>							
+								</div>
+								<div class="desc">${supply[i].desc? supply[i].desc.replace(/\d{7,}/g, '*'):'此用户没有介绍信息'}</div>
+								<div class="times">
+								  <span>${supply[i].saddtime.split(' ')[0]}</span>
+								  <span><span style="color:#007AFF;">${supply[i].click}</span>人浏览</span>
+								 <span>离你<span class="distance">${distance(lat1,lng1,supply[i].lat,supply[i].lng)}km</span></span>
+								</div>                    
+							</a>`;							
+						};
+						$("#tab3").html(list);
+						// if(province == undefined){
+							$("#tab3").css("display","block");
+						// };
+						// 
+					}else{
+						// console.log("暂无普通数据")
+					};
+					
+					
+				}
+				
+			});
+
+		};
+
+	</script>
+</html>

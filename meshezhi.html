@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>设置</title>
+		<script src="web/js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="web/css/mui.min.css" />
+		<style>
+			.mui-table-view{margin-top: 10px !important;}
+          .mui-table-view:after{left:18px;right:18px;}
+          .mui-table-view-cell:after{right:15px;}
+          .mui-navigate-right{font-size: 12px;color:#707070 !important;}
+		  .mui-navigate-right:after{font-size: 20px;}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="javascript:void(0)"></a>
+			<h1 class="mui-title">设置</h1>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="/sands/updatepass.html">修改密码</a>                   	                 
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="javascript:void(0);" id="loginout">退出登录</a> 					
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="javascript:void(0);" id="cancel">账号注销</a>				
+				</li>
+				
+			</ul>
+		</div>
+
+	</body>
+	<script type="text/javascript">
+		$(".mui-action-back").click(function(){
+			window.location.href = "/sands/meindex.html";
+		})
+		$("#loginout").click(function(){
+			mui.confirm('','确认退出',["取消","确认"],function(res){
+				if(res.index == 0){
+					console.log("取消")
+				}else{
+					loginout();
+				}
+			});
+		});
+		$("#cancel").click(function(){
+			mui.confirm('','确认注销',["取消","确认"],function(res){
+				if(res.index == 0){
+					console.log("取消")
+				}else{
+					cancel();
+				}
+			});
+		});
+		function loginout(){ //退出
+			$.ajax({
+				url: url + "/api/login/loginout",
+				method: "POST",
+				dataType: "json",
+				success: function(res){
+					console.log(res)
+					if(res.status == 0){
+						mui.alert(res.msg);
+					}else{
+						mui.alert("退出成功!");
+						window.location.href = "/sands/index.html";
+					}
+				}
+			})
+		};
+		
+		function cancel(){ //账号注销
+			$.ajax({
+				url: url + "/api/login/cancel",
+				method: "GET",
+				dataType: "json",
+				success: function(res){
+					console.log(res)
+					if(res.status == 0){
+						mui.alert(res.msg);
+					}else{
+						mui.alert("注销成功!");
+						window.location.href = "/sands/index.html";
+					}
+				}
+			})
+		};
+	</script>
+
+</html>
